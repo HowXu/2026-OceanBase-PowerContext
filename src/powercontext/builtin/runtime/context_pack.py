@@ -57,10 +57,12 @@ def _payload(raw: bytes, schema: str, fields: set[str]) -> dict[str, Any]:
 
 
 def _items(value: object) -> tuple[bytes, ...]:
-    if not isinstance(value, list) or any(not isinstance(item, str) for item in value):
+    if not isinstance(value, list):
         raise ContextPackError("wire context items must be a Base64 string array")  # noqa: TRY003
     decoded = []
     for item in value:
+        if not isinstance(item, str):
+            raise ContextPackError("wire context items must be Base64 strings")  # noqa: TRY003
         try:
             raw = base64.b64decode(item, validate=True)
         except ValueError as error:
