@@ -1,0 +1,52 @@
+{
+  "source": "https://github.com/Yale-LILY/QMSum/blob/83d7768c1f2b4dfeb091385d3dc7e239b8e5bb7e/data/ALL/test/ES2004a.json",
+  "license": "MIT",
+  "selection": "Up to twelve eligible turns in original order with 120-900 UTF-8 bytes containing remote, control or design",
+  "turns": [
+    {
+      "index": 184,
+      "speaker": "Project Manager",
+      "text": "Okay . What are your experiences with remote controls ? I mean I've got {disfmarker} we got um {disfmarker} we had three videos , a T_V_ and a sort of amp thing all set up"
+    },
+    {
+      "index": 195,
+      "speaker": "Project Manager",
+      "text": "but that was quite good , the fact that you could {disfmarker} You didn't have six remote controls sitting in front of you ."
+    },
+    {
+      "index": 203,
+      "speaker": "Marketing",
+      "text": "My experience has only been being given the remote control with the object I buy , not doing any tampering with it and programming , using it to programme T_V_ and uh uh videos and things . But basically on , off , volume up and down , channel one , two , th that basic functions ,"
+    },
+    {
+      "index": 208,
+      "speaker": "Project Manager",
+      "text": "{disfmarker} and you don't want to {disfmarker} I hate I hate looking at a control and seeing a million tiny little buttons with tiny little words saying what they all do"
+    },
+    {
+      "index": 223,
+      "speaker": "Marketing",
+      "text": "Actually that just raises a point , I wonder what our design people think , but you know on a mobile phone , you can press a key and it gives you a menu , it's got a menu display ,"
+    },
+    {
+      "index": 267,
+      "speaker": "Project Manager",
+      "text": "and also {disfmarker} and then a menu to go into with obvious pictures , obvious symbols and that's where you control recording and things like that ."
+    },
+    {
+      "index": 268,
+      "speaker": "Marketing",
+      "text": "{vocalsound} Yeah . Mm-hmm . Mm . The other thing is , just ch chucking into mobile phone f design features again , it could have a flip top remote control so that when you flip over the top , your screen is {disfmarker} you can have a bigger screen in the the flip over ."
+    },
+    {
+      "index": 293,
+      "speaker": "Industrial Designer",
+      "text": "about what you're saying about the uh {disfmarker} does does it need to be fashionable ? The sort of {disfmarker} I I had a quick look at the company website and it's like the the uh {disfmarker} we put the fashion into electronics , so I think think the whole design thing might be qui"
+    },
+    {
+      "index": 309,
+      "speaker": "Project Manager",
+      "text": "it would probably . I mean there's Sky remote controls and everything . They're kind of moulded and look a bit different , and the Telewest remote controls are silver plastic , which looks a bit smarter ,"
+    }
+  ]
+}
