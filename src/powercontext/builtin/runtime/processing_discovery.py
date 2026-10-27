@@ -23,7 +23,7 @@ from powercontext.builtin.persistence.cursors import SourceCursorRepository
 from powercontext.builtin.persistence.database import AsyncDatabase
 from powercontext.builtin.persistence.processing_intents import ArtifactProcessingIntentRepository
 from powercontext.builtin.persistence.supervision import ArtifactProcessingFence, ArtifactProcessingLeaseRepository
-from powercontext.builtin.persistence.tables import PROFILE_POLICIES_TABLE, SOURCE_JOURNAL_HEADS_TABLE
+from powercontext.builtin.persistence.tables import PROFILE_POLICIES_TABLE, SOURCE_JOURNAL_HEADS_TABLE, SOURCES_TABLE
 
 
 async def enabled_profile_scopes(connection: AsyncConnection, scope_ids: tuple[str, ...]) -> frozenset[str]:
@@ -43,6 +43,33 @@ async def enabled_profile_scopes(connection: AsyncConnection, scope_ids: tuple[s
         .with_for_update()
     )
     return frozenset(rows)
+
+
+async def source_count_scopes(
+    connection: AsyncConnection,
+    scope_ids: tuple[str, ...],
+    *,
+    binding_name: str,
+    threshold: int,
+) -> frozenset[str]:
+    """Qualify real journal rows after each Family's successful cursor, without reading bodies."""
+
+    eligible = set()
+    cursors = SourceCursorRepository()
+    for scope_id in scope_ids:
+        stored = await cursors.load(connection, scope_id, binding_name)
+        after = 0 if stored is None else stored.cursor.sequence
+        # An indexed nth-row lookup stops at the threshold even for a large backlog.
+        position = await connection.scalar(
+            select(SOURCES_TABLE.c.journal_position)
+            .where(SOURCES_TABLE.c.scope_id == scope_id, SOURCES_TABLE.c.journal_position > after)
+            .order_by(SOURCES_TABLE.c.journal_position)
+            .offset(threshold - 1)
+            .limit(1)
+        )
+        if position is not None:
+            eligible.add(scope_id)
+    return frozenset(eligible)
 
 
 class SourceProcessingPendingProvider:
