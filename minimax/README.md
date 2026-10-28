@@ -45,6 +45,8 @@ python scripts/demo.py --mode recorded --run-dir /tmp/sdd-recorded-demo
 
 已交付的 `evidence/live/` 保留真实开发过程：`minimax/request.json` 是提供给模型的任务和完整上下文，`minimax/response.json` 是实际代码响应及模型标识、用量和耗时。`sample/catalog/service.py` 与该响应中的代码逐字一致；测试文件在修改前后保持同一 SHA-256。
 
+`evidence/replay-clean/` 是全新源码目录、独立虚拟环境、空数据库下的无密钥重放记录；安装步骤和源提交记录在该目录的 `ENVIRONMENT.json`。它复用已交付的真实模型响应，没有新模型调用。
+
 模块自身的测试：
 
 ```bash

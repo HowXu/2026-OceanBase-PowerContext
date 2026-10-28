@@ -19,6 +19,8 @@
 
 模块测试另有 12 项通过，记录在 `evidence/live/module-tests.json` 和 `module-tests.log`。验证绑定资料快照和任务哈希，规格更新后旧结果会过期，再次验证后才恢复为当前有效。
 
+独立干净环境复现也已通过，记录在 `evidence/replay-clean/`：从 `c947d6240d4744a9bd63d8aa790ceb33d41c0b35` 的源码归档建立新目录和新虚拟环境，按锁定依赖安装，清除模型密钥与代理环境变量，使用同一真实模型响应完成全部步骤。源码目录不含 `.env`，运行时数据库和任务状态均从空开始，没有再次调用模型。
+
 `evidence/reference/` 与 `evidence/clean/` 是开发期间的参考实现验证，明确标记 `minimax_actual_participation=false`，保留用于比较。正式开发证明以 `evidence/live/` 为准，重新验收以 `recorded` 流程的实际执行结果为准。
 
 作品分支为 `codex/minimax-sdd-context`，基于主办方 `d647275c308e09b7b623f322a26f5c4e85734fb0`，所有作品文件在 `minimax/`。代码和材料已准备为固定提交；比赛平台的最终提交尚未执行。

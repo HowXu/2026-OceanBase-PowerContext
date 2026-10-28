@@ -1,0 +1,49 @@
+{
+  "time": "2026-10-28T06:42:41.516951+00:00",
+  "label": "spec-v2",
+  "git_commit": "",
+  "snapshot": "d4db25847e9d2f9653f95b141e6a1ba6e66af8863449e6e99ee3389667f0ff6f",
+  "task_sha256": "bdf9eabc84ef9f53d77a1c0b4bc38de7a6e68fd83d8050ad34a8546a5546a15d",
+  "source_sha256": {
+    "catalog/__init__.py": "93a4f3cb12ecf47f62dcb3c3a0c2edb95cdbce3f8e215047d14d0262c19d5118",
+    "catalog/__main__.py": "5fc8d916694c7463506edd28370fd31c953b2f2f7cf18cd97e6a1ef9b3c7507c",
+    "catalog/service.py": "1f4bb83919efc41375f3edd6d76a70e96718854f1a6bc8ba8ff5e5ec7549f6e5",
+    "tests/conftest.py": "1d11fdb80225708094a930ab37911d5cb8bae02adf380eb6ceaa2f990ea16d4e",
+    "tests/test_min_stock.py": "35462c2677b579a155380e5f49f5f02df9de70f3c46187507dbfc625d325974f",
+    "tests/test_regression.py": "d92903b091f478f8cd9092130ba21f3a68c1cce6530c7e649fbf62343ced39bd"
+  },
+  "code_version_sha256": "b33839e343f34e35701ddb7193bd5dcfc7d05c788c5311629347368b2c92d3d7",
+  "results": {
+    "target": {
+      "command": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_min_stock.py"
+      ],
+      "cwd": "sample-project",
+      "exit_code": 0,
+      "log": "spec-v2-target.log",
+      "summary": "21 passed in 0.01s"
+    },
+    "regression": {
+      "command": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_regression.py"
+      ],
+      "cwd": "sample-project",
+      "exit_code": 0,
+      "log": "spec-v2-regression.log",
+      "summary": "8 passed in 0.01s"
+    }
+  },
+  "passed": true
+}

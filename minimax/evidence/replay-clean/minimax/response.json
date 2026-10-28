@@ -1,0 +1,30 @@
+{
+  "schema": "sdd-minimax-record.v1",
+  "provider": "MiniMax",
+  "time": "2026-10-28T06:37:09.525366+00:00",
+  "base_url": "https://api.minimax.cn/anthropic",
+  "model": "MiniMax-M3.1-Flash",
+  "response_model": "MiniMax-M3.1-Flash",
+  "response_id": "0730cb156aefc52151c3e8e636fbd175",
+  "request_id": null,
+  "http_status": 200,
+  "stop_reason": "end_turn",
+  "latency_seconds": 2.267,
+  "usage": {
+    "input_tokens": 7086,
+    "output_tokens": 412,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 128,
+    "output_tokens_details": {
+      "thinking_tokens": 87
+    }
+  },
+  "context_snapshot": "f1b39f107acffff23d73fe224ca532639e3ebc51e4c8a318f4eb8f888edb80db",
+  "request_sha256": "0129ecc543a052c8c06b6fe09195355e584ff334fd80a7be19b623c9bbfdc0a8",
+  "files": [
+    {
+      "path": "catalog/service.py",
+      "content": "\"\"\"Inventory catalog.\"\"\"\n\nfrom dataclasses import dataclass\n\n\n@dataclass(frozen=True)\nclass Product:\n    sku: str\n    name: str\n    stock: int\n    active: bool = True\n\n\ndef _validate_min_stock(min_stock):\n    \"\"\"Validate the optional min_stock threshold.\n\n    min_stock must be a non-negative built-in int. Booleans, integer\n    subclasses, floats, strings and containers are rejected.\n    \"\"\"\n    if min_stock is None:\n        return\n    if type(min_stock) is not int:\n        raise ValueError(\"min_stock must be a non-negative built-in int or None\")\n    if min_stock < 0:\n        raise ValueError(\"min_stock must be a non-negative built-in int or None\")\n\n\ndef list_products(products, *, query=\"\", include_inactive=False, min_stock=None):\n    \"\"\"Return matching products in input order; do not mutate caller data.\"\"\"\n    _validate_min_stock(min_stock)\n    needle = query.casefold()\n    return [\n        product\n        for product in products\n        if (include_inactive or product.active)\n        and needle in product.name.casefold()\n        and (min_stock is None or product.stock >= min_stock)\n    ]\n"
+    }
+  ]
+}

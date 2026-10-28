@@ -1,0 +1,55 @@
+{
+  "state": {
+    "completed": [
+      "retrieve-current-context",
+      "run-target-and-regression-tests",
+      "implement-min-stock"
+    ],
+    "todo": [],
+    "verification": {
+      "snapshot": "66023491ee3cf3435daca851e31c25b3bbe5930a816a5706c6da5941645b212b",
+      "task_sha256": "bdf9eabc84ef9f53d77a1c0b4bc38de7a6e68fd83d8050ad34a8546a5546a15d",
+      "passed": true,
+      "label": "after",
+      "results": {
+        "target": {
+          "command": [
+            "python",
+            "-m",
+            "pytest",
+            "-q",
+            "-p",
+            "no:cacheprovider",
+            "tests/test_min_stock.py"
+          ],
+          "cwd": "sample-project",
+          "exit_code": 0,
+          "log": "after-target.log",
+          "summary": "21 passed in 0.01s"
+        },
+        "regression": {
+          "command": [
+            "python",
+            "-m",
+            "pytest",
+            "-q",
+            "-p",
+            "no:cacheprovider",
+            "tests/test_regression.py"
+          ],
+          "cwd": "sample-project",
+          "exit_code": 0,
+          "log": "after-regression.log",
+          "summary": "8 passed in 0.01s"
+        }
+      }
+    },
+    "saved_at": "2026-10-28T06:42:25.132362+00:00",
+    "note": ""
+  },
+  "reference": {
+    "family": "atomic-memory",
+    "artifact_id": "art_b5d43795e7c042549ec8f7238ad417d5",
+    "revision": 1
+  }
+}

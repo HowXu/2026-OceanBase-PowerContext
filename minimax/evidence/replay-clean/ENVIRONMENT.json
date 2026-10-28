@@ -1,0 +1,20 @@
+{
+  "source_commit": "c947d6240d4744a9bd63d8aa790ceb33d41c0b35",
+  "source_preparation": "git archive extracted to a new Linux source directory; no .env included",
+  "environment": "new isolated Python virtual environment with locked dependencies installed from the package cache",
+  "python": "3.11.15",
+  "install_commands": [
+    "uv venv --python 3.11 /tmp/sdd-release-venv-c947d62",
+    "uv pip install --offline --python /tmp/sdd-release-venv-c947d62/bin/python -r /tmp/sdd-release-source-c947d62/minimax/requirements.lock",
+    "uv pip install --offline --python /tmp/sdd-release-venv-c947d62/bin/python --no-deps -e /tmp/sdd-release-source-c947d62/minimax"
+  ],
+  "install_exit_codes": [0, 0, 0],
+  "validation_command": "env -u MINIMAX_API_KEY -u HTTPS_PROXY -u HTTP_PROXY -u ALL_PROXY python scripts/demo.py --mode recorded --run-dir /tmp/sdd-release-review-c947d62",
+  "validation_exit_code": 0,
+  "target_test_count_after": 21,
+  "regression_test_count_after": 8,
+  "reused_real_response_id": "0730cb156aefc52151c3e8e636fbd175",
+  "new_model_call": false,
+  "runtime_database_initial_state": "empty",
+  "powercontext_initial_state": "empty"
+}
