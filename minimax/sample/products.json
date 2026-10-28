@@ -1,0 +1,8 @@
+[
+  {"sku": "A", "name": "Ocean Notebook", "stock": 0, "active": true},
+  {"sku": "B", "name": "Blue Pen", "stock": 5, "active": true},
+  {"sku": "C", "name": "Ocean Pencil", "stock": 10, "active": true},
+  {"sku": "D", "name": "Old Ocean Pen", "stock": 8, "active": false},
+  {"sku": "E", "name": "Straße Paper", "stock": 5, "active": true}
+]
+

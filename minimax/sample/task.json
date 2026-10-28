@@ -1,0 +1,12 @@
+{
+  "id": "inventory-min-stock",
+  "scope": "inventory-catalog",
+  "objective": "Add an inclusive, validated min_stock filter to list_products while preserving all existing catalog behavior.",
+  "manifest": "manifest.json",
+  "editable_files": ["catalog/service.py"],
+  "required_sources": ["specs/catalog.json#INV-001", "specs/catalog.json#INV-002", "specs/catalog.json#INV-003", "catalog/service.py#list_products", "tests/test_min_stock.py#test_inclusive_threshold", "tests/test_regression.py#test_default_behavior"],
+  "target_tests": ["tests/test_min_stock.py"],
+  "regression_tests": ["tests/test_regression.py"],
+  "initial_todo": ["retrieve-current-context", "implement-min-stock", "run-target-and-regression-tests"]
+}
+

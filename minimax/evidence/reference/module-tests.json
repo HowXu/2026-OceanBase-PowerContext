@@ -1,0 +1,24 @@
+{
+  "time": "2026-10-28T06:22:44.036239+00:00",
+  "command": [
+    "python",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "tests"
+  ],
+  "exit_code": 0,
+  "source_sha256": {
+    "sdd_context/__init__.py": "30c42b49ff996151e204948f21959724468a7223f1cc091174778a9a97a558fc",
+    "sdd_context/agent.py": "3feaefac8d21dae94a804c78c5bbc97f55a81bfd9b37ab938ebf1c053f198ed2",
+    "sdd_context/cli.py": "844ae8277022102ffd2850db3d278d60fa1499a60138d7b2d09ea603eaee8e3e",
+    "sdd_context/common.py": "90e191590f0568a8d2440a20167ceb8bdaa31b0b17ab017c1505aa874ef54e79",
+    "sdd_context/index.py": "73f2c42eb40b6d04e991829f3152ec480abe7cb1c83ed9dfb1d55073d5d2e992",
+    "sdd_context/state.py": "701c4b25cc8c48d6e2a8c9110a30560ddd063f08d4237fd8ecffcff666b1ac08",
+    "sdd_context/validation.py": "58f04c9469e1ce6be9e42d7d7d483bebca8443cfc59d9e433ee1a200eea1c819",
+    "tests/test_context.py": "b539b0d7f9c631e7afb11d1668483dded91b9f66d2f6ca92455b64014fb3c465"
+  },
+  "code_version_sha256": "92db0a852a710472717248066f9ea88d1d515ebb77522a5f533b749d2680b88d"
+}

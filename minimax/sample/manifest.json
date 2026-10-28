@@ -1,0 +1,13 @@
+{
+  "project_id": "inventory-demo",
+  "sources": [
+    {"path": "specs/catalog.json", "kind": "spec", "scope": "inventory-catalog"},
+    {"path": "catalog/service.py", "kind": "code", "scope": "inventory-catalog"},
+    {"path": "catalog/__main__.py", "kind": "code", "scope": "inventory-catalog"},
+    {"path": "tests/conftest.py", "kind": "test", "scope": "inventory-catalog"},
+    {"path": "tests/test_min_stock.py", "kind": "test", "scope": "inventory-catalog"},
+    {"path": "tests/test_regression.py", "kind": "test", "scope": "inventory-catalog"},
+    {"path": "products.json", "kind": "data", "scope": "inventory-catalog"}
+  ]
+}
+
