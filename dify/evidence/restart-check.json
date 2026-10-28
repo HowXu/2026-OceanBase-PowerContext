@@ -1,0 +1,9 @@
+{
+  "test": "recreate-powercontext-and-gateway-containers",
+  "state_equal": true,
+  "scope": "scp_44a1zkchjztbk76d1e1bmgt0r3",
+  "artifact_id": "art_c39d7c9a988943e49ccdc9a890b815b1",
+  "revision_before": 4,
+  "revision_after": 4,
+  "checkpoint_sha256": "0137de45c2651552cd27b1d10cbe66a06035924ce17473fdf9bc45a1398f332f"
+}

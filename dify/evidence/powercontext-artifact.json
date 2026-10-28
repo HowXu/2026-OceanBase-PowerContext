@@ -1,0 +1,44 @@
+{
+  "scope": "scp_44a1zkchjztbk76d1e1bmgt0r3",
+  "artifact_id": "art_c39d7c9a988943e49ccdc9a890b815b1",
+  "etag": "\"revision:4\"",
+  "revision": 4,
+  "state": {
+    "turn": 4,
+    "trust": 3,
+    "items": [
+      "会下雨的伞"
+    ],
+    "history": [
+      {
+        "turn": 1,
+        "action": "我用「会下雨的伞」交换车票。",
+        "event": "交换",
+        "item": "会下雨的伞"
+      },
+      {
+        "turn": 2,
+        "action": "你还记得我上次带来的失物吗？",
+        "event": "回忆",
+        "item": ""
+      },
+      {
+        "turn": 3,
+        "action": "我把失物归还给原来的主人。",
+        "event": "归还",
+        "item": ""
+      },
+      {
+        "turn": 4,
+        "action": "站长，我下次还会回来。",
+        "event": "结局后闲聊",
+        "item": ""
+      }
+    ],
+    "ending": "替月亮保管失物的人",
+    "last_request_id": "e56fa27079c748c0afdbb5e3119c1df2",
+    "last_answer": "站长还记得你带来的「会下雨的伞」。车站已经为你保留结局「替月亮保管失物的人」。你可以继续聊天，或换一个存档口令重玩。\n\n第 4 次到站 ｜ 信任 3 ｜ 结局后闲聊\n\n结局：替月亮保管失物的人\n\n规则旁白 · 已存档",
+    "last_narrator": "rules",
+    "last_request_hash": "b6f34ead849587db4e7a5abea0367d8e5f547ef0f59e41a1e84a3c85b4531138"
+  }
+}

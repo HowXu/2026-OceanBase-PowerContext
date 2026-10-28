@@ -1,0 +1,410 @@
+[
+  {
+    "workflow_run_id": "1e1e7d2b-3708-4077-9cce-7ee6b06e4041",
+    "nodes": [
+      {
+        "node_id": "start",
+        "node_type": "start",
+        "title": "到站登记",
+        "status": "succeeded",
+        "elapsed_time": 0.041723
+      },
+      {
+        "node_id": "normalize",
+        "node_type": "code",
+        "title": "校验并编码输入",
+        "status": "succeeded",
+        "elapsed_time": 0.109278
+      },
+      {
+        "node_id": "prepare",
+        "node_type": "http-request",
+        "title": "读取 PowerContext 存档",
+        "status": "succeeded",
+        "elapsed_time": 0.120827
+      },
+      {
+        "node_id": "plan",
+        "node_type": "code",
+        "title": "推进规则并组装 AI 提示词",
+        "status": "succeeded",
+        "elapsed_time": 0.035529
+      },
+      {
+        "node_id": "narrate",
+        "node_type": "http-request",
+        "title": "AI 站长生成旁白",
+        "status": "succeeded",
+        "elapsed_time": 0.017237
+      },
+      {
+        "node_id": "finish",
+        "node_type": "code",
+        "title": "校验旁白响应",
+        "status": "succeeded",
+        "elapsed_time": 0.03094
+      },
+      {
+        "node_id": "commit",
+        "node_type": "http-request",
+        "title": "保存 PowerContext 新修订",
+        "status": "succeeded",
+        "elapsed_time": 0.574028
+      },
+      {
+        "node_id": "present",
+        "node_type": "code",
+        "title": "确认存档并输出结果",
+        "status": "succeeded",
+        "elapsed_time": 0.035208
+      },
+      {
+        "node_id": "end",
+        "node_type": "end",
+        "title": "本次到站记录",
+        "status": "succeeded",
+        "elapsed_time": 0.017051
+      }
+    ]
+  },
+  {
+    "workflow_run_id": "fcb4b208-da5f-4a8d-8b28-6c1363144bdb",
+    "nodes": [
+      {
+        "node_id": "start",
+        "node_type": "start",
+        "title": "到站登记",
+        "status": "succeeded",
+        "elapsed_time": 0.010432
+      },
+      {
+        "node_id": "normalize",
+        "node_type": "code",
+        "title": "校验并编码输入",
+        "status": "succeeded",
+        "elapsed_time": 0.032396
+      },
+      {
+        "node_id": "prepare",
+        "node_type": "http-request",
+        "title": "读取 PowerContext 存档",
+        "status": "succeeded",
+        "elapsed_time": 0.068607
+      },
+      {
+        "node_id": "plan",
+        "node_type": "code",
+        "title": "推进规则并组装 AI 提示词",
+        "status": "succeeded",
+        "elapsed_time": 0.027944
+      },
+      {
+        "node_id": "narrate",
+        "node_type": "http-request",
+        "title": "AI 站长生成旁白",
+        "status": "succeeded",
+        "elapsed_time": 0.015836
+      },
+      {
+        "node_id": "finish",
+        "node_type": "code",
+        "title": "校验旁白响应",
+        "status": "succeeded",
+        "elapsed_time": 0.025861
+      },
+      {
+        "node_id": "commit",
+        "node_type": "http-request",
+        "title": "保存 PowerContext 新修订",
+        "status": "succeeded",
+        "elapsed_time": 0.058562
+      },
+      {
+        "node_id": "present",
+        "node_type": "code",
+        "title": "确认存档并输出结果",
+        "status": "succeeded",
+        "elapsed_time": 0.02738
+      },
+      {
+        "node_id": "end",
+        "node_type": "end",
+        "title": "本次到站记录",
+        "status": "succeeded",
+        "elapsed_time": 0.015184
+      }
+    ]
+  },
+  {
+    "workflow_run_id": "c5432864-9a65-4cdf-86c2-498c26f66926",
+    "nodes": [
+      {
+        "node_id": "start",
+        "node_type": "start",
+        "title": "到站登记",
+        "status": "succeeded",
+        "elapsed_time": 0.00774
+      },
+      {
+        "node_id": "normalize",
+        "node_type": "code",
+        "title": "校验并编码输入",
+        "status": "succeeded",
+        "elapsed_time": 0.027133
+      },
+      {
+        "node_id": "prepare",
+        "node_type": "http-request",
+        "title": "读取 PowerContext 存档",
+        "status": "succeeded",
+        "elapsed_time": 0.055969
+      },
+      {
+        "node_id": "plan",
+        "node_type": "code",
+        "title": "推进规则并组装 AI 提示词",
+        "status": "succeeded",
+        "elapsed_time": 0.026541
+      },
+      {
+        "node_id": "narrate",
+        "node_type": "http-request",
+        "title": "AI 站长生成旁白",
+        "status": "succeeded",
+        "elapsed_time": 0.015261
+      },
+      {
+        "node_id": "finish",
+        "node_type": "code",
+        "title": "校验旁白响应",
+        "status": "succeeded",
+        "elapsed_time": 0.027629
+      },
+      {
+        "node_id": "commit",
+        "node_type": "http-request",
+        "title": "保存 PowerContext 新修订",
+        "status": "succeeded",
+        "elapsed_time": 0.14148
+      },
+      {
+        "node_id": "present",
+        "node_type": "code",
+        "title": "确认存档并输出结果",
+        "status": "succeeded",
+        "elapsed_time": 0.030647
+      },
+      {
+        "node_id": "end",
+        "node_type": "end",
+        "title": "本次到站记录",
+        "status": "succeeded",
+        "elapsed_time": 0.01438
+      }
+    ]
+  },
+  {
+    "workflow_run_id": "3fb1f23b-8e41-44f0-804b-6923dbaadc47",
+    "nodes": [
+      {
+        "node_id": "start",
+        "node_type": "start",
+        "title": "到站登记",
+        "status": "succeeded",
+        "elapsed_time": 0.008526
+      },
+      {
+        "node_id": "normalize",
+        "node_type": "code",
+        "title": "校验并编码输入",
+        "status": "succeeded",
+        "elapsed_time": 0.028406
+      },
+      {
+        "node_id": "prepare",
+        "node_type": "http-request",
+        "title": "读取 PowerContext 存档",
+        "status": "succeeded",
+        "elapsed_time": 0.078524
+      },
+      {
+        "node_id": "plan",
+        "node_type": "code",
+        "title": "推进规则并组装 AI 提示词",
+        "status": "succeeded",
+        "elapsed_time": 0.026659
+      },
+      {
+        "node_id": "narrate",
+        "node_type": "http-request",
+        "title": "AI 站长生成旁白",
+        "status": "succeeded",
+        "elapsed_time": 0.017123
+      },
+      {
+        "node_id": "finish",
+        "node_type": "code",
+        "title": "校验旁白响应",
+        "status": "succeeded",
+        "elapsed_time": 0.028629
+      },
+      {
+        "node_id": "commit",
+        "node_type": "http-request",
+        "title": "保存 PowerContext 新修订",
+        "status": "succeeded",
+        "elapsed_time": 0.080256
+      },
+      {
+        "node_id": "present",
+        "node_type": "code",
+        "title": "确认存档并输出结果",
+        "status": "succeeded",
+        "elapsed_time": 0.027907
+      },
+      {
+        "node_id": "end",
+        "node_type": "end",
+        "title": "本次到站记录",
+        "status": "succeeded",
+        "elapsed_time": 0.016397
+      }
+    ]
+  },
+  {
+    "workflow_run_id": "25ef1961-7ae5-46c5-aa1d-d92a54baf21f",
+    "nodes": [
+      {
+        "node_id": "start",
+        "node_type": "start",
+        "title": "到站登记",
+        "status": "succeeded",
+        "elapsed_time": 0.008248
+      },
+      {
+        "node_id": "normalize",
+        "node_type": "code",
+        "title": "校验并编码输入",
+        "status": "succeeded",
+        "elapsed_time": 0.025606
+      },
+      {
+        "node_id": "prepare",
+        "node_type": "http-request",
+        "title": "读取 PowerContext 存档",
+        "status": "succeeded",
+        "elapsed_time": 0.055626
+      },
+      {
+        "node_id": "plan",
+        "node_type": "code",
+        "title": "推进规则并组装 AI 提示词",
+        "status": "succeeded",
+        "elapsed_time": 0.02537
+      },
+      {
+        "node_id": "narrate",
+        "node_type": "http-request",
+        "title": "AI 站长生成旁白",
+        "status": "succeeded",
+        "elapsed_time": 0.016329
+      },
+      {
+        "node_id": "finish",
+        "node_type": "code",
+        "title": "校验旁白响应",
+        "status": "succeeded",
+        "elapsed_time": 0.025937
+      },
+      {
+        "node_id": "commit",
+        "node_type": "http-request",
+        "title": "保存 PowerContext 新修订",
+        "status": "succeeded",
+        "elapsed_time": 0.13586
+      },
+      {
+        "node_id": "present",
+        "node_type": "code",
+        "title": "确认存档并输出结果",
+        "status": "succeeded",
+        "elapsed_time": 0.030657
+      },
+      {
+        "node_id": "end",
+        "node_type": "end",
+        "title": "本次到站记录",
+        "status": "succeeded",
+        "elapsed_time": 0.01753
+      }
+    ]
+  },
+  {
+    "workflow_run_id": "7b210d1c-0e0f-4292-9dfe-7beb59e707a5",
+    "nodes": [
+      {
+        "node_id": "start",
+        "node_type": "start",
+        "title": "到站登记",
+        "status": "succeeded",
+        "elapsed_time": 0.00768
+      },
+      {
+        "node_id": "normalize",
+        "node_type": "code",
+        "title": "校验并编码输入",
+        "status": "succeeded",
+        "elapsed_time": 0.029276
+      },
+      {
+        "node_id": "prepare",
+        "node_type": "http-request",
+        "title": "读取 PowerContext 存档",
+        "status": "succeeded",
+        "elapsed_time": 0.056298
+      },
+      {
+        "node_id": "plan",
+        "node_type": "code",
+        "title": "推进规则并组装 AI 提示词",
+        "status": "succeeded",
+        "elapsed_time": 0.02686
+      },
+      {
+        "node_id": "narrate",
+        "node_type": "http-request",
+        "title": "AI 站长生成旁白",
+        "status": "succeeded",
+        "elapsed_time": 0.016199
+      },
+      {
+        "node_id": "finish",
+        "node_type": "code",
+        "title": "校验旁白响应",
+        "status": "succeeded",
+        "elapsed_time": 0.026672
+      },
+      {
+        "node_id": "commit",
+        "node_type": "http-request",
+        "title": "保存 PowerContext 新修订",
+        "status": "succeeded",
+        "elapsed_time": 0.132953
+      },
+      {
+        "node_id": "present",
+        "node_type": "code",
+        "title": "确认存档并输出结果",
+        "status": "succeeded",
+        "elapsed_time": 0.030875
+      },
+      {
+        "node_id": "end",
+        "node_type": "end",
+        "title": "本次到站记录",
+        "status": "succeeded",
+        "elapsed_time": 0.016097
+      }
+    ]
+  }
+]

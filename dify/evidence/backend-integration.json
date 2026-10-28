@@ -1,0 +1,46 @@
+{
+  "kind": "backend-integration-only",
+  "player": "backend-e49e06c65b1a4f0fa1a7fdf0b4423f9d",
+  "turns": [
+    {
+      "action": "我用「会下雨的伞」交换车票。",
+      "request_id": "f0cf350b10e444be8ee67766b96f8f23",
+      "outputs": {
+        "answer": "站长把「会下雨的伞」放进一只比它大一点的抽屉，回赠你一张只会指向昨天的车票。信任增加 1。\n\n第 1 次到站 ｜ 信任 1 ｜ 交换\n\n规则旁白 · 已存档",
+        "state": "{\"turn\": 1, \"trust\": 1, \"items\": [\"会下雨的伞\"], \"history\": [{\"turn\": 1, \"action\": \"我用「会下雨的伞」交换车票。\", \"event\": \"交换\", \"item\": \"会下雨的伞\"}], \"ending\": \"\", \"last_request_id\": \"f0cf350b10e444be8ee67766b96f8f23\", \"last_answer\": \"站长把「会下雨的伞」放进一只比它大一点的抽屉，回赠你一张只会指向昨天的车票。信任增加 1。\\n\\n第 1 次到站 ｜ 信任 1 ｜ 交换\\n\\n规则旁白 · 已存档\", \"last_narrator\": \"rules\", \"last_request_hash\": \"04e009c1d6de39f869983e99f0e75301db8ddde17d814f01660d402328af3b60\"}",
+        "memory_ref": "atomic-memory/art_c829c7433e21441285363912b478a0b5@1",
+        "narrator": "rules"
+      }
+    },
+    {
+      "action": "我用「会下雨的伞」交换车票。",
+      "request_id": "f0cf350b10e444be8ee67766b96f8f23",
+      "outputs": {
+        "answer": "站长把「会下雨的伞」放进一只比它大一点的抽屉，回赠你一张只会指向昨天的车票。信任增加 1。\n\n第 1 次到站 ｜ 信任 1 ｜ 交换\n\n规则旁白 · 已存档",
+        "state": "{\"turn\": 1, \"trust\": 1, \"items\": [\"会下雨的伞\"], \"history\": [{\"turn\": 1, \"action\": \"我用「会下雨的伞」交换车票。\", \"event\": \"交换\", \"item\": \"会下雨的伞\"}], \"ending\": \"\", \"last_request_id\": \"f0cf350b10e444be8ee67766b96f8f23\", \"last_answer\": \"站长把「会下雨的伞」放进一只比它大一点的抽屉，回赠你一张只会指向昨天的车票。信任增加 1。\\n\\n第 1 次到站 ｜ 信任 1 ｜ 交换\\n\\n规则旁白 · 已存档\", \"last_narrator\": \"rules\", \"last_request_hash\": \"04e009c1d6de39f869983e99f0e75301db8ddde17d814f01660d402328af3b60\"}",
+        "memory_ref": "atomic-memory/art_c829c7433e21441285363912b478a0b5@1",
+        "narrator": "rules"
+      }
+    },
+    {
+      "action": "你还记得我上次带来的失物吗？",
+      "request_id": "91411f2d81f0499baa12250e3c6b20c8",
+      "outputs": {
+        "answer": "站长还记得你带来的「会下雨的伞」。登记簿里留着：会下雨的伞。站长说：‘换了车厢，我也认得你的行李。’\n\n第 2 次到站 ｜ 信任 1 ｜ 回忆\n\n规则旁白 · 已存档",
+        "state": "{\"turn\": 2, \"trust\": 1, \"items\": [\"会下雨的伞\"], \"history\": [{\"turn\": 1, \"action\": \"我用「会下雨的伞」交换车票。\", \"event\": \"交换\", \"item\": \"会下雨的伞\"}, {\"turn\": 2, \"action\": \"你还记得我上次带来的失物吗？\", \"event\": \"回忆\", \"item\": \"\"}], \"ending\": \"\", \"last_request_id\": \"91411f2d81f0499baa12250e3c6b20c8\", \"last_answer\": \"站长还记得你带来的「会下雨的伞」。登记簿里留着：会下雨的伞。站长说：‘换了车厢，我也认得你的行李。’\\n\\n第 2 次到站 ｜ 信任 1 ｜ 回忆\\n\\n规则旁白 · 已存档\", \"last_narrator\": \"rules\", \"last_request_hash\": \"d463e4d9690a74f5902f1b5f3ba41adcf24b09d9ff77fe151d283ceddc088e32\"}",
+        "memory_ref": "atomic-memory/art_c829c7433e21441285363912b478a0b5@2",
+        "narrator": "rules"
+      }
+    },
+    {
+      "action": "我把失物归还给原来的主人。",
+      "request_id": "0c06c23af96a45e9bc319359ef876076",
+      "outputs": {
+        "answer": "站长还记得你带来的「会下雨的伞」。你把失物还给原来的主人。站长交给你备用钥匙：从今晚起，你也是第七站的守夜人。解锁结局「替月亮保管失物的人」。\n\n第 3 次到站 ｜ 信任 3 ｜ 归还\n\n结局：替月亮保管失物的人\n\n规则旁白 · 已存档",
+        "state": "{\"turn\": 3, \"trust\": 3, \"items\": [\"会下雨的伞\"], \"history\": [{\"turn\": 1, \"action\": \"我用「会下雨的伞」交换车票。\", \"event\": \"交换\", \"item\": \"会下雨的伞\"}, {\"turn\": 2, \"action\": \"你还记得我上次带来的失物吗？\", \"event\": \"回忆\", \"item\": \"\"}, {\"turn\": 3, \"action\": \"我把失物归还给原来的主人。\", \"event\": \"归还\", \"item\": \"\"}], \"ending\": \"替月亮保管失物的人\", \"last_request_id\": \"0c06c23af96a45e9bc319359ef876076\", \"last_answer\": \"站长还记得你带来的「会下雨的伞」。你把失物还给原来的主人。站长交给你备用钥匙：从今晚起，你也是第七站的守夜人。解锁结局「替月亮保管失物的人」。\\n\\n第 3 次到站 ｜ 信任 3 ｜ 归还\\n\\n结局：替月亮保管失物的人\\n\\n规则旁白 · 已存档\", \"last_narrator\": \"rules\", \"last_request_hash\": \"6280ed63f051bd7d42a7d1cdbd0f5d3159ec10432c1480cc52d97b534c4f40b2\"}",
+        "memory_ref": "atomic-memory/art_c829c7433e21441285363912b478a0b5@3",
+        "narrator": "rules"
+      }
+    }
+  ]
+}
