@@ -6,3 +6,5 @@ data/
 *.log
 evidence/local-*
 compose.override.yaml
+dist/
+*.local.env

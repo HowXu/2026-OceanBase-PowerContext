@@ -83,11 +83,15 @@ docker compose up -d --force-recreate gateway
 
 ```dotenv
 MODEL_BASE_URL=https://api.deepseek.com/v1
-MODEL_NAME=deepseek-chat
+MODEL_NAME=deepseek-flash
 MODEL_API_KEY=YOUR_MODEL_API_KEY
 ```
 
 可替换为提供 `/chat/completions` 的 OpenAI 兼容服务。密钥从对应模型提供商获取，费用取决于服务商。每次正常行动调用一次模型，重试已提交的最后一次行动不会再次生成。HTTP 传输重试或提交冲突可能额外产生调用。
+
+使用本例的服务时，可在 [DeepSeek 开放平台](https://platform.deepseek.com/) 创建 API Key，然后填写上面的三项配置。评审使用自己的密钥即可复现，不需要作者的私有配置或已有存档。
+
+本次真实验收使用 DeepSeek 官方 API 的 `deepseek-flash`。短旁白调用显式关闭该服务默认开启的思考模式，保留完整的最终回答，并拒绝接受因长度上限而未正常结束的回答；其他兼容服务不会收到 DeepSeek 专有参数。参数依据：[DeepSeek 思考模式说明](https://api-docs.deepseek.com/guides/thinking_mode/)。
 
 **未填模型密钥时仍能完整试玩**：旁白明确标注“规则旁白”，不宣称调用了 AI。模型超时、限流、空输出时标注“规则旁白（模型暂不可用）”。基础记忆读写不需要模型。模型生成的故事是开放输出，数值、藏品、结局以存档凭证为准。
 
@@ -118,9 +122,24 @@ python scripts/build_dsl.py --check
 python scripts/verify_dify.py
 ```
 
+正式提交使用真实模型的严格验收，先完成 `MODEL_*` 配置，再按顺序执行：
+
+```bash
+python scripts/verify_dify.py --require-model
+python scripts/collect_node_evidence.py --ai
+python scripts/verify_fresh_import.py
+python scripts/verify_persistence.py --ai
+python scripts/check_submission.py
+python scripts/package_submission.py --require-ai
+```
+
+严格验收拒绝把 `rules` 或 `rules-fallback` 当作 AI 成功，并保存模型返回的名称、响应编号及可用的用量统计。它还核对重复请求返回同一模型响应、重新导入当前 DSL 后的全新应用可运行、替换容器后存档保持一致。`verify_fresh_import.py` 会创建一个专用的本地验收应用，不修改当前应用的 ID 或密钥；`verify_persistence.py` 会替换本项目的 PowerContext 和网关容器，保留数据卷。
+
+打包脚本只收集声明的源码、DSL、说明和证据，排除 `.env`、运行数据及缓存，扫描配置中的真实密钥，并在 ZIP 旁生成逐文件 SHA256 清单。默认输出到忽略提交的 `dist/`；也可用 `--output <路径>` 指定位置。带 `--require-ai` 时，缺失真实 AI 验收证据会阻止生成最终提交包。
+
 `verify_dify.py` **通过真实网页网关 → Dify API → DSL 节点 → PowerContext** 执行六次请求，检查跨会话召回、用户隔离、请求重放、版本增长及结局。结果写入 `evidence/dify-end-to-end.json`，每一步保留真实 `workflow_run_id` 和 `memory_ref`，可在 Dify 运行日志里核对。它每次生成新的存档，能够重复运行，不依赖作者上次的状态。
 
-本次已完成实际部署验收：6 次 Dify 流程、54 个成功节点、真实 PowerContext 第 4 版存档，以及替换 PowerContext / 网关容器后的完整状态一致性检查。详见 [`evidence/README.md`](evidence/README.md)。本次验证使用明确标注的规则旁白；AI 旁白待用户填入有效模型配置后另行验证。实际 Python 依赖清单保存在 `evidence/python-packages.txt`。
+本次已完成真实 AI 验收：6 次主要 Dify 流程、1 次全新应用导入后的运行，共 63 个成功节点，均使用正常结束的 `deepseek-flash` 旁白；同时完成了 PowerContext 实际存档读回和容器替换后的完整状态一致性检查。19 项本地自动测试通过，其中模型异常测试使用模拟 HTTP，真实模型调用证据独立记录。详见 [`evidence/README.md`](evidence/README.md)。实际 Python 依赖清单保存在 `evidence/python-packages.txt`。
 
 `scripts/smoke_backend.py` 是较低层的 PowerContext 接口验证；它在 Python 中调用纯函数，**不能代替 Dify 端到端验收**。其日志单独标注 `backend-integration-only`。
 

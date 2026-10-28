@@ -1,0 +1,54 @@
+{
+  "scope": "scp_2727mxse2eg71masfpt5zj7p48",
+  "artifact_id": "art_d9ac615d5c1e4bd58fe9b6be6fcd7b64",
+  "etag": "\"revision:4\"",
+  "revision": 4,
+  "state": {
+    "turn": 4,
+    "trust": 3,
+    "items": [
+      "会下雨的伞"
+    ],
+    "history": [
+      {
+        "turn": 1,
+        "action": "我用「会下雨的伞」交换车票。",
+        "event": "交换",
+        "item": "会下雨的伞"
+      },
+      {
+        "turn": 2,
+        "action": "你还记得我上次带来的失物吗？",
+        "event": "回忆",
+        "item": ""
+      },
+      {
+        "turn": 3,
+        "action": "我把失物归还给原来的主人。",
+        "event": "归还",
+        "item": ""
+      },
+      {
+        "turn": 4,
+        "action": "站长，我下次还会回来。",
+        "event": "结局后闲聊",
+        "item": ""
+      }
+    ],
+    "ending": "替月亮保管失物的人",
+    "last_request_id": "36c72f02d0b842f790d6cace48ccc37f",
+    "last_answer": "站长把「会下雨的伞」从登记簿上轻轻划到结局那一栏，伞骨还滴着几滴不知哪来的雨。“下次回来”这话我记在小账上了，但账本只记来过的人，不记没发生的约定。车站已经为你保留结局「替月亮保管失物的人」——听着挺体面，其实就是替月亮看管那些没人认领的亮晶晶小东西。你可以继续聊两句，或者换一个存档口令重玩。建议：一是去失物架前挑一件登记在册的旧物，听它把故事讲完；二是若想重来，直接报个新口令，我这边好翻页。\n\n第 4 次到站 ｜ 信任 3 ｜ 结局后闲聊\n\n结局：替月亮保管失物的人\n\nAI 站长 · 已存档",
+    "last_narrator": "model",
+    "last_model": {
+      "model": "deepseek-flash",
+      "response_id": "8e014f02-a0b0-490f-b493-b84cd89233a4",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 334,
+        "completion_tokens": 144,
+        "total_tokens": 478
+      }
+    },
+    "last_request_hash": "b6f34ead849587db4e7a5abea0367d8e5f547ef0f59e41a1e84a3c85b4531138"
+  }
+}

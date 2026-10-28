@@ -1,0 +1,90 @@
+{
+  "fresh_application": true,
+  "application_id": "a978ea7d-5487-42ba-bbf2-6207c9f39fc1",
+  "workflow_run_id": "219bce9e-a008-4615-8402-1d15a4867f0c",
+  "dsl_sha256": "05ca20a4eff21ed22c4524ec4d591bba196e0f6b08d283f15cef13791582a6b1",
+  "input": {
+    "player_id": "import-892ad1bdeaa44d3fac83d8ec0a5ce10e",
+    "action": "我用「会下雨的伞」交换车票。",
+    "request_id": "93a1912f5d34423ab165b448551f744b"
+  },
+  "initial_turn": 1,
+  "narrator": "model",
+  "memory_ref": "atomic-memory/art_10faf40b9dc541f3abd0153f7b7590ea@1",
+  "model_trace": {
+    "model": "deepseek-flash",
+    "response_id": "0c2677db-4431-42c3-96f7-6dfeef1deeff",
+    "finish_reason": "stop",
+    "usage": {
+      "prompt_tokens": 223,
+      "completion_tokens": 120,
+      "total_tokens": 343
+    }
+  },
+  "answer": "站台灯管嗡嗡响，像在替谁叹气。我接过那把“会下雨的伞”，伞尖还滴着不存在的雨，便把它塞进略大一号的抽屉——它合得刚好，像本来就在等这个位置。回赠你一张“只会指向昨天的车票”，票面潮潮的。这里尚无交换记录，所以别问我上次；你提的“上次”也只是故事里的一页。信任增加 1。接下来你可以：把车票翻面看看背面的日期；或告诉我抽屉合上时你听见了什么。\n\n第 1 次到站 ｜ 信任 1 ｜ 交换\n\nAI 站长 · 已存档",
+  "nodes": [
+    {
+      "node_id": "start",
+      "node_type": "start",
+      "title": "到站登记",
+      "status": "succeeded",
+      "elapsed_time": 0.014534
+    },
+    {
+      "node_id": "normalize",
+      "node_type": "code",
+      "title": "校验并编码输入",
+      "status": "succeeded",
+      "elapsed_time": 0.040767
+    },
+    {
+      "node_id": "prepare",
+      "node_type": "http-request",
+      "title": "读取 PowerContext 存档",
+      "status": "succeeded",
+      "elapsed_time": 0.13292
+    },
+    {
+      "node_id": "plan",
+      "node_type": "code",
+      "title": "推进规则并组装 AI 提示词",
+      "status": "succeeded",
+      "elapsed_time": 0.031075
+    },
+    {
+      "node_id": "narrate",
+      "node_type": "http-request",
+      "title": "AI 站长生成旁白",
+      "status": "succeeded",
+      "elapsed_time": 2.094936
+    },
+    {
+      "node_id": "finish",
+      "node_type": "code",
+      "title": "校验旁白响应",
+      "status": "succeeded",
+      "elapsed_time": 0.03115
+    },
+    {
+      "node_id": "commit",
+      "node_type": "http-request",
+      "title": "保存 PowerContext 新修订",
+      "status": "succeeded",
+      "elapsed_time": 0.098328
+    },
+    {
+      "node_id": "present",
+      "node_type": "code",
+      "title": "确认存档并输出结果",
+      "status": "succeeded",
+      "elapsed_time": 0.031972
+    },
+    {
+      "node_id": "end",
+      "node_type": "end",
+      "title": "本次到站记录",
+      "status": "succeeded",
+      "elapsed_time": 0.019341
+    }
+  ]
+}

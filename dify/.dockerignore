@@ -5,3 +5,5 @@ evidence
 tests
 __pycache__
 .pytest_cache
+dist
+*.local.env

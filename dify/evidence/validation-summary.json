@@ -1,0 +1,20 @@
+{
+  "status": "passed",
+  "checked_at": "2026-10-28T14:02:58.264259+00:00",
+  "dify_runs": 7,
+  "successful_nodes": 63,
+  "unit_tests_passed": 19,
+  "models": [
+    "deepseek-flash"
+  ],
+  "unique_model_responses": 6,
+  "all_model_responses_finished": true,
+  "cached_replay_reused_response": true,
+  "usage_for_unique_responses": {
+    "prompt_tokens": 1569,
+    "completion_tokens": 724,
+    "total_tokens": 2293
+  },
+  "powercontext_revision": 4,
+  "container_replacement_preserved_state": true
+}

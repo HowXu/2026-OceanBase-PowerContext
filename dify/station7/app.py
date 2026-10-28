@@ -5,10 +5,11 @@ from contextlib import asynccontextmanager
 import hashlib
 import hmac
 import json
+import logging
 import os
 from pathlib import Path
-import secrets
 import time
+from urllib.parse import urlsplit
 
 import httpx
 from fastapi import Depends, FastAPI, Header, HTTPException
@@ -24,6 +25,7 @@ SECRET = os.environ.get("GATEWAY_TOKEN", "")
 if len(SECRET) < 32:
     raise RuntimeError("Set GATEWAY_TOKEN to at least 32 random characters before starting.")
 locks = [asyncio.Lock() for _ in range(128)]
+logger = logging.getLogger(__name__)
 
 
 def player_lock(player_id):
@@ -111,31 +113,54 @@ async def narrate(payload: dict):
     decode_ticket(payload["ticket"])
     if payload.get("cached"):
         return payload
-    narration, mode = payload["fallback"], "rules"
+    narration, mode, model_trace = payload["fallback"], "rules", None
     if os.getenv("MODEL_API_KEY"):
         try:
+            base_url = os.getenv("MODEL_BASE_URL", "https://api.deepseek.com/v1").rstrip("/")
+            model_request = {
+                "model": os.getenv("MODEL_NAME", "deepseek-flash"), "temperature": 0.8,
+                "max_tokens": 1024, "messages": [{"role": "system", "content": payload["system"]},
+                                                 {"role": "user", "content": payload["prompt"]}],
+            }
+            # The official DeepSeek API enables thinking by default. Short story
+            # narration needs the visible answer, not a reasoning-token budget.
+            if urlsplit(base_url).hostname == "api.deepseek.com":
+                model_request["thinking"] = {"type": "disabled"}
             response = await app.state.http.post(
-                os.getenv("MODEL_BASE_URL", "https://api.deepseek.com/v1").rstrip("/") + "/chat/completions",
+                base_url + "/chat/completions",
                 headers={"Authorization": "Bearer " + os.environ["MODEL_API_KEY"]},
-                json={"model": os.getenv("MODEL_NAME", "deepseek-chat"), "temperature": 0.8,
-                      "max_tokens": 650, "messages": [{"role": "system", "content": payload["system"]},
-                                                     {"role": "user", "content": payload["prompt"]}]},
+                json=model_request,
                 timeout=40,
             )
             response.raise_for_status()
-            text = response.json()["choices"][0]["message"]["content"]
+            completion = response.json()
+            choice = completion["choices"][0]
+            text = choice["message"]["content"]
             if not isinstance(text, str) or not text.strip():
                 raise ValueError("Empty model output")
+            if choice.get("finish_reason") not in {None, "stop"}:
+                raise ValueError("Incomplete model output")
             narration, mode = text.strip()[:800], "model"
+            usage = completion.get("usage") or {}
+            model_trace = {
+                "model": completion.get("model") or os.getenv("MODEL_NAME", "deepseek-flash"),
+                "response_id": completion.get("id"),
+                "finish_reason": choice.get("finish_reason"),
+                "usage": {key: usage[key] for key in ["prompt_tokens", "completion_tokens", "total_tokens"]
+                          if isinstance(usage, dict) and isinstance(usage.get(key), int)},
+            }
             # Keep the memory callback observable even if creative prose omits it.
             items = payload["state"]["items"]
             if items and items[-1] not in narration:
                 narration = "登记簿上仍有「" + items[-1] + "」。\n" + narration
-        except (httpx.HTTPError, KeyError, IndexError, ValueError, TypeError):
+        except (httpx.HTTPError, KeyError, IndexError, ValueError, TypeError) as error:
             # The rule event remains usable and the UI explicitly identifies fallback.
-            mode = "rules-fallback"
+            narration, mode, model_trace = payload["fallback"], "rules-fallback", None
+            status = error.response.status_code if isinstance(error, httpx.HTTPStatusError) else None
+            logger.warning("Model narration unavailable: reason=%s status=%s", type(error).__name__, status)
     return {"ticket": payload["ticket"], "state": payload["state"],
-            "narration": narration, "narrator": mode, "event": payload["event"]}
+            "narration": narration, "narrator": mode, "event": payload["event"],
+            "model_trace": model_trace}
 
 
 def saved_response(loaded, state):
@@ -165,7 +190,8 @@ async def commit(payload: dict):
         state_line = f"第 {new['turn']} 次到站 ｜ 信任 {new['trust']} ｜ {payload['event']}"
         ending = "\n\n结局：" + new["ending"] if new["ending"] else ""
         answer = f"{payload['narration']}\n\n{state_line}{ending}\n\n{label} · 已存档"
-        new.update(last_answer=answer, last_narrator=mode, last_request_hash=ticket["hash"])
+        new.update(last_answer=answer, last_narrator=mode, last_model=payload.get("model_trace"),
+                   last_request_hash=ticket["hash"])
         ref = await app.state.memory.save(loaded, new)
         return {"answer": answer, "state": new, "memory_ref": ref, "narrator": mode, "cached": False}
 

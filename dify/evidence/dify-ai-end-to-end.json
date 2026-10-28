@@ -1,0 +1,303 @@
+{
+  "kind": "real-dify-ai-end-to-end",
+  "timestamp": "2026-10-28T13:55:06.928318+00:00",
+  "versions": {
+    "dify": "1.9.1",
+    "powercontext": "1.4.1"
+  },
+  "player": "accept-fd26e64058ef47c197a3c3190e4d4e8f",
+  "turns": [
+    {
+      "input": {
+        "player_id": "accept-fd26e64058ef47c197a3c3190e4d4e8f",
+        "action": "我用「会下雨的伞」交换车票。",
+        "request_id": "1f40770cb86b47bba60d0b28fe35bc29"
+      },
+      "output": {
+        "answer": "“会下雨的伞”啊，正好抽屉空着一格，比它大一点，塞进去刚好。回赠你一张车票，别指望它带你去明天，它只认昨天。至于你刚才说的“上次”，我这本小账上还干干净净，尚无交换记录，别拿我当老熟人。信任加一，记下了。建议：一、拿票去候车室看看它指向哪个昨天；二、把伞的雨声写进失物登记备注，省得下次认错。\n\n第 1 次到站 ｜ 信任 1 ｜ 交换\n\nAI 站长 · 已存档",
+        "state": {
+          "turn": 1,
+          "trust": 1,
+          "items": [
+            "会下雨的伞"
+          ],
+          "history": [
+            {
+              "turn": 1,
+              "action": "我用「会下雨的伞」交换车票。",
+              "event": "交换",
+              "item": "会下雨的伞"
+            }
+          ],
+          "ending": "",
+          "last_request_id": "1f40770cb86b47bba60d0b28fe35bc29",
+          "last_answer": "“会下雨的伞”啊，正好抽屉空着一格，比它大一点，塞进去刚好。回赠你一张车票，别指望它带你去明天，它只认昨天。至于你刚才说的“上次”，我这本小账上还干干净净，尚无交换记录，别拿我当老熟人。信任加一，记下了。建议：一、拿票去候车室看看它指向哪个昨天；二、把伞的雨声写进失物登记备注，省得下次认错。\n\n第 1 次到站 ｜ 信任 1 ｜ 交换\n\nAI 站长 · 已存档",
+          "last_narrator": "model",
+          "last_model": {
+            "model": "deepseek-flash",
+            "response_id": "ed193335-547c-4a08-ae6d-5152e031b97d",
+            "finish_reason": "stop",
+            "usage": {
+              "prompt_tokens": 223,
+              "completion_tokens": 111,
+              "total_tokens": 334
+            }
+          },
+          "last_request_hash": "04e009c1d6de39f869983e99f0e75301db8ddde17d814f01660d402328af3b60"
+        },
+        "memory_ref": "atomic-memory/art_d9ac615d5c1e4bd58fe9b6be6fcd7b64@1",
+        "narrator": "model",
+        "workflow_run_id": "0374557e-e43e-4be7-bb05-192cb3e7f377"
+      }
+    },
+    {
+      "input": {
+        "player_id": "accept-fd26e64058ef47c197a3c3190e4d4e8f",
+        "action": "我用「会下雨的伞」交换车票。",
+        "request_id": "1f40770cb86b47bba60d0b28fe35bc29"
+      },
+      "output": {
+        "answer": "“会下雨的伞”啊，正好抽屉空着一格，比它大一点，塞进去刚好。回赠你一张车票，别指望它带你去明天，它只认昨天。至于你刚才说的“上次”，我这本小账上还干干净净，尚无交换记录，别拿我当老熟人。信任加一，记下了。建议：一、拿票去候车室看看它指向哪个昨天；二、把伞的雨声写进失物登记备注，省得下次认错。\n\n第 1 次到站 ｜ 信任 1 ｜ 交换\n\nAI 站长 · 已存档",
+        "state": {
+          "turn": 1,
+          "trust": 1,
+          "items": [
+            "会下雨的伞"
+          ],
+          "history": [
+            {
+              "turn": 1,
+              "action": "我用「会下雨的伞」交换车票。",
+              "event": "交换",
+              "item": "会下雨的伞"
+            }
+          ],
+          "ending": "",
+          "last_request_id": "1f40770cb86b47bba60d0b28fe35bc29",
+          "last_answer": "“会下雨的伞”啊，正好抽屉空着一格，比它大一点，塞进去刚好。回赠你一张车票，别指望它带你去明天，它只认昨天。至于你刚才说的“上次”，我这本小账上还干干净净，尚无交换记录，别拿我当老熟人。信任加一，记下了。建议：一、拿票去候车室看看它指向哪个昨天；二、把伞的雨声写进失物登记备注，省得下次认错。\n\n第 1 次到站 ｜ 信任 1 ｜ 交换\n\nAI 站长 · 已存档",
+          "last_narrator": "model",
+          "last_model": {
+            "model": "deepseek-flash",
+            "response_id": "ed193335-547c-4a08-ae6d-5152e031b97d",
+            "finish_reason": "stop",
+            "usage": {
+              "prompt_tokens": 223,
+              "completion_tokens": 111,
+              "total_tokens": 334
+            }
+          },
+          "last_request_hash": "04e009c1d6de39f869983e99f0e75301db8ddde17d814f01660d402328af3b60"
+        },
+        "memory_ref": "atomic-memory/art_d9ac615d5c1e4bd58fe9b6be6fcd7b64@1",
+        "narrator": "model",
+        "workflow_run_id": "4b1728e5-3734-4c01-b175-2b47c874fae8"
+      }
+    },
+    {
+      "input": {
+        "player_id": "accept-fd26e64058ef47c197a3c3190e4d4e8f",
+        "action": "你还记得我上次带来的失物吗？",
+        "request_id": "b9b192447e0f484294455ae67d642e6d"
+      },
+      "output": {
+        "answer": "站长把登记簿往前推了推，指尖停在“会下雨的伞”那行：“换了车厢，我也认得你的行李。不过，上次你带来的伞，已经在上一轮交换里换了车票；这里只留记录，不留实物，也不替谁保存成功。”他顿了顿，又补一句，“至于‘上次’——簿上写什么，我就认什么，别把故事当车票用。”  \n建议：先核对登记簿里“会下雨的伞”的交换记录；再决定这次要登记哪件新失物。\n\n第 2 次到站 ｜ 信任 1 ｜ 回忆\n\nAI 站长 · 已存档",
+        "state": {
+          "turn": 2,
+          "trust": 1,
+          "items": [
+            "会下雨的伞"
+          ],
+          "history": [
+            {
+              "turn": 1,
+              "action": "我用「会下雨的伞」交换车票。",
+              "event": "交换",
+              "item": "会下雨的伞"
+            },
+            {
+              "turn": 2,
+              "action": "你还记得我上次带来的失物吗？",
+              "event": "回忆",
+              "item": ""
+            }
+          ],
+          "ending": "",
+          "last_request_id": "b9b192447e0f484294455ae67d642e6d",
+          "last_answer": "站长把登记簿往前推了推，指尖停在“会下雨的伞”那行：“换了车厢，我也认得你的行李。不过，上次你带来的伞，已经在上一轮交换里换了车票；这里只留记录，不留实物，也不替谁保存成功。”他顿了顿，又补一句，“至于‘上次’——簿上写什么，我就认什么，别把故事当车票用。”  \n建议：先核对登记簿里“会下雨的伞”的交换记录；再决定这次要登记哪件新失物。\n\n第 2 次到站 ｜ 信任 1 ｜ 回忆\n\nAI 站长 · 已存档",
+          "last_narrator": "model",
+          "last_model": {
+            "model": "deepseek-flash",
+            "response_id": "d691ae09-a8cc-4d5a-a16d-2a979deb067e",
+            "finish_reason": "stop",
+            "usage": {
+              "prompt_tokens": 265,
+              "completion_tokens": 116,
+              "total_tokens": 381
+            }
+          },
+          "last_request_hash": "d463e4d9690a74f5902f1b5f3ba41adcf24b09d9ff77fe151d283ceddc088e32"
+        },
+        "memory_ref": "atomic-memory/art_d9ac615d5c1e4bd58fe9b6be6fcd7b64@2",
+        "narrator": "model",
+        "workflow_run_id": "deee8782-b5d8-4131-98a5-dcc5c2f4f92f"
+      }
+    },
+    {
+      "input": {
+        "player_id": "other-803c59841e224e72bb9b5b693824f012",
+        "action": "你还记得我上次带来的失物吗？",
+        "request_id": "9afad1084c8b4c69ab2411324994034f"
+      },
+      "output": {
+        "answer": "我翻了翻登记簿，纸页干净得能照见人。您说的“上次”，我这儿没有记录，也不替谁记这笔账。我们还没有交换过失物，所以您带来的东西，我一件都认不出来。别急着翻旧账，先带一件不可能的东西来吧——比如会自己写字的钥匙，或者只在下雨天响的铃铛。至于现在，您可以先说说手里有什么，或者回去翻翻抽屉再过来。\n\n第 1 次到站 ｜ 信任 0 ｜ 回忆\n\nAI 站长 · 已存档",
+        "state": {
+          "turn": 1,
+          "trust": 0,
+          "items": [],
+          "history": [
+            {
+              "turn": 1,
+              "action": "你还记得我上次带来的失物吗？",
+              "event": "回忆",
+              "item": ""
+            }
+          ],
+          "ending": "",
+          "last_request_id": "9afad1084c8b4c69ab2411324994034f",
+          "last_answer": "我翻了翻登记簿，纸页干净得能照见人。您说的“上次”，我这儿没有记录，也不替谁记这笔账。我们还没有交换过失物，所以您带来的东西，我一件都认不出来。别急着翻旧账，先带一件不可能的东西来吧——比如会自己写字的钥匙，或者只在下雨天响的铃铛。至于现在，您可以先说说手里有什么，或者回去翻翻抽屉再过来。\n\n第 1 次到站 ｜ 信任 0 ｜ 回忆\n\nAI 站长 · 已存档",
+          "last_narrator": "model",
+          "last_model": {
+            "model": "deepseek-flash",
+            "response_id": "ecd83c8d-e22c-4530-9d46-192be9e952e8",
+            "finish_reason": "stop",
+            "usage": {
+              "prompt_tokens": 209,
+              "completion_tokens": 95,
+              "total_tokens": 304
+            }
+          },
+          "last_request_hash": "d463e4d9690a74f5902f1b5f3ba41adcf24b09d9ff77fe151d283ceddc088e32"
+        },
+        "memory_ref": "atomic-memory/art_11e34c5de70c4cac8b85ed1c19661d1c@1",
+        "narrator": "model",
+        "workflow_run_id": "52fed0de-9b6c-46c8-a526-a984bbba204c"
+      }
+    },
+    {
+      "input": {
+        "player_id": "accept-fd26e64058ef47c197a3c3190e4d4e8f",
+        "action": "我把失物归还给原来的主人。",
+        "request_id": "e382b7dc06ae4e879f8a9a6821eddd30"
+      },
+      "output": {
+        "answer": "你把这把「会下雨的伞」递还给原主，伞骨上的水珠沿着你的指节滑下来，像在签收一张湿漉漉的收据。我翻开登记簿，把「会下雨的伞」这一行轻轻划掉，又听见你说起上次——簿上其实只记着那次交换，别的我没敢替你编。然后我把备用钥匙推到你面前：从今晚起，你也是第七站的守夜人。结局「替月亮保管失物的人」落定，账就算上了。\n建议：先检查钥匙齿口有没有缠着伞线；再到窗边记下今夜第一场雨落在几点。\n\n第 3 次到站 ｜ 信任 3 ｜ 归还\n\n结局：替月亮保管失物的人\n\nAI 站长 · 已存档",
+        "state": {
+          "turn": 3,
+          "trust": 3,
+          "items": [
+            "会下雨的伞"
+          ],
+          "history": [
+            {
+              "turn": 1,
+              "action": "我用「会下雨的伞」交换车票。",
+              "event": "交换",
+              "item": "会下雨的伞"
+            },
+            {
+              "turn": 2,
+              "action": "你还记得我上次带来的失物吗？",
+              "event": "回忆",
+              "item": ""
+            },
+            {
+              "turn": 3,
+              "action": "我把失物归还给原来的主人。",
+              "event": "归还",
+              "item": ""
+            }
+          ],
+          "ending": "替月亮保管失物的人",
+          "last_request_id": "e382b7dc06ae4e879f8a9a6821eddd30",
+          "last_answer": "你把这把「会下雨的伞」递还给原主，伞骨上的水珠沿着你的指节滑下来，像在签收一张湿漉漉的收据。我翻开登记簿，把「会下雨的伞」这一行轻轻划掉，又听见你说起上次——簿上其实只记着那次交换，别的我没敢替你编。然后我把备用钥匙推到你面前：从今晚起，你也是第七站的守夜人。结局「替月亮保管失物的人」落定，账就算上了。\n建议：先检查钥匙齿口有没有缠着伞线；再到窗边记下今夜第一场雨落在几点。\n\n第 3 次到站 ｜ 信任 3 ｜ 归还\n\n结局：替月亮保管失物的人\n\nAI 站长 · 已存档",
+          "last_narrator": "model",
+          "last_model": {
+            "model": "deepseek-flash",
+            "response_id": "2cda7498-6482-4727-b63f-c378d6752804",
+            "finish_reason": "stop",
+            "usage": {
+              "prompt_tokens": 315,
+              "completion_tokens": 138,
+              "total_tokens": 453
+            }
+          },
+          "last_request_hash": "6280ed63f051bd7d42a7d1cdbd0f5d3159ec10432c1480cc52d97b534c4f40b2"
+        },
+        "memory_ref": "atomic-memory/art_d9ac615d5c1e4bd58fe9b6be6fcd7b64@3",
+        "narrator": "model",
+        "workflow_run_id": "50f382b1-62c1-475e-a371-c458dbd3711d"
+      }
+    },
+    {
+      "input": {
+        "player_id": "accept-fd26e64058ef47c197a3c3190e4d4e8f",
+        "action": "站长，我下次还会回来。",
+        "request_id": "36c72f02d0b842f790d6cace48ccc37f"
+      },
+      "output": {
+        "answer": "站长把「会下雨的伞」从登记簿上轻轻划到结局那一栏，伞骨还滴着几滴不知哪来的雨。“下次回来”这话我记在小账上了，但账本只记来过的人，不记没发生的约定。车站已经为你保留结局「替月亮保管失物的人」——听着挺体面，其实就是替月亮看管那些没人认领的亮晶晶小东西。你可以继续聊两句，或者换一个存档口令重玩。建议：一是去失物架前挑一件登记在册的旧物，听它把故事讲完；二是若想重来，直接报个新口令，我这边好翻页。\n\n第 4 次到站 ｜ 信任 3 ｜ 结局后闲聊\n\n结局：替月亮保管失物的人\n\nAI 站长 · 已存档",
+        "state": {
+          "turn": 4,
+          "trust": 3,
+          "items": [
+            "会下雨的伞"
+          ],
+          "history": [
+            {
+              "turn": 1,
+              "action": "我用「会下雨的伞」交换车票。",
+              "event": "交换",
+              "item": "会下雨的伞"
+            },
+            {
+              "turn": 2,
+              "action": "你还记得我上次带来的失物吗？",
+              "event": "回忆",
+              "item": ""
+            },
+            {
+              "turn": 3,
+              "action": "我把失物归还给原来的主人。",
+              "event": "归还",
+              "item": ""
+            },
+            {
+              "turn": 4,
+              "action": "站长，我下次还会回来。",
+              "event": "结局后闲聊",
+              "item": ""
+            }
+          ],
+          "ending": "替月亮保管失物的人",
+          "last_request_id": "36c72f02d0b842f790d6cace48ccc37f",
+          "last_answer": "站长把「会下雨的伞」从登记簿上轻轻划到结局那一栏，伞骨还滴着几滴不知哪来的雨。“下次回来”这话我记在小账上了，但账本只记来过的人，不记没发生的约定。车站已经为你保留结局「替月亮保管失物的人」——听着挺体面，其实就是替月亮看管那些没人认领的亮晶晶小东西。你可以继续聊两句，或者换一个存档口令重玩。建议：一是去失物架前挑一件登记在册的旧物，听它把故事讲完；二是若想重来，直接报个新口令，我这边好翻页。\n\n第 4 次到站 ｜ 信任 3 ｜ 结局后闲聊\n\n结局：替月亮保管失物的人\n\nAI 站长 · 已存档",
+          "last_narrator": "model",
+          "last_model": {
+            "model": "deepseek-flash",
+            "response_id": "8e014f02-a0b0-490f-b493-b84cd89233a4",
+            "finish_reason": "stop",
+            "usage": {
+              "prompt_tokens": 334,
+              "completion_tokens": 144,
+              "total_tokens": 478
+            }
+          },
+          "last_request_hash": "b6f34ead849587db4e7a5abea0367d8e5f547ef0f59e41a1e84a3c85b4531138"
+        },
+        "memory_ref": "atomic-memory/art_d9ac615d5c1e4bd58fe9b6be6fcd7b64@4",
+        "narrator": "model",
+        "workflow_run_id": "2a5a6436-6dcb-4691-aad5-a852ada50c11"
+      }
+    }
+  ]
+}
