@@ -20,7 +20,7 @@ import json
 from collections.abc import Sequence
 from dataclasses import dataclass, replace
 from itertools import chain
-from typing import TypeVar
+from typing import TypeVar, cast
 
 from powercontext.artifacts import ArtifactAddress, ArtifactRef
 from powercontext.builtin.artifacts.experience import Experience, ExperienceSearchHit, render_experience
@@ -28,6 +28,7 @@ from powercontext.builtin.artifacts.memory.models import MemoryCitation, MemoryH
 from powercontext.builtin.artifacts.profile.models import Profile
 from powercontext.builtin.artifacts.topic_memory import TopicMemory, TopicMemorySearchHit
 from powercontext.builtin.runtime.errors import PreparedContextInvariantError
+from powercontext.builtin.runtime.evidence_selection import EvidenceFragment, render_evidence, select_evidence
 from powercontext.builtin.runtime.models import PrepareContextRequest, PreparedContext
 from powercontext.builtin.runtime.prepared_code import (
     CodeEvidenceRef,
@@ -106,6 +107,7 @@ class PreparedContextBuild:
     origins: tuple[PreparedContextOrigin, ...]
     omissions: PreparedContextOmissions = PreparedContextOmissions()
     code_origins: tuple[CodeEvidenceRef, ...] = ()
+    fragments: tuple[EvidenceFragment, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -211,6 +213,25 @@ class PreparedContextBuilder:
         profile_candidates: Sequence[PreparedProfileCandidate] = (),
         code_candidates: Sequence[PreparedCodeCandidate] = (),
     ) -> PreparedContextBuild:
+        if request.evidence_selection:
+            if sum(len(candidates.hits) for candidates in memory_candidates) > self.memory_candidate_limit:
+                raise PreparedContextInvariantError("memory-candidate-limit")
+            entries = [
+                (cast(MemoryEntryAddress, entry.origin), entry.content)
+                for candidates in memory_candidates
+                for entry in self._memory_entries(candidates.memory_ref, candidates.hits, scope_id=candidates.scope_id)
+            ]
+            fragments = select_evidence(entries, request.query, request.max_bytes, self.entry_limit)
+            content = render_evidence(fragments)
+            return PreparedContextBuild(
+                context=(
+                    PreparedContext(status="ready", content=content, content_bytes=len(content.encode("utf-8")))
+                    if fragments
+                    else self.empty()
+                ),
+                origins=tuple(fragment.address for fragment in fragments),
+                fragments=fragments,
+            )
         if request.include_code:
 
             def historical(history_request: PrepareContextRequest, entries: int) -> PreparedContextBuild:
