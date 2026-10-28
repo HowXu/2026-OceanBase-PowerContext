@@ -1,4 +1,4 @@
-"""Codex reference implementation for local checks; not a MiniMax development record."""
+"""Inventory catalog."""
 
 from dataclasses import dataclass
 
@@ -11,10 +11,23 @@ class Product:
     active: bool = True
 
 
+def _validate_min_stock(min_stock):
+    """Validate the optional min_stock threshold.
+
+    min_stock must be a non-negative built-in int. Booleans, integer
+    subclasses, floats, strings and containers are rejected.
+    """
+    if min_stock is None:
+        return
+    if type(min_stock) is not int:
+        raise ValueError("min_stock must be a non-negative built-in int or None")
+    if min_stock < 0:
+        raise ValueError("min_stock must be a non-negative built-in int or None")
+
+
 def list_products(products, *, query="", include_inactive=False, min_stock=None):
     """Return matching products in input order; do not mutate caller data."""
-    if min_stock is not None and (type(min_stock) is not int or min_stock < 0):
-        raise ValueError("min_stock must be a non-negative integer")
+    _validate_min_stock(min_stock)
     needle = query.casefold()
     return [
         product
@@ -23,4 +36,3 @@ def list_products(products, *, query="", include_inactive=False, min_stock=None)
         and needle in product.name.casefold()
         and (min_stock is None or product.stock >= min_stock)
     ]
-

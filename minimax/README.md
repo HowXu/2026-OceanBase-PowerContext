@@ -2,7 +2,7 @@
 
 根据开发任务，从 **seekdb 的实际查询结果**中取出当前有效规格、代码、测试和样例数据，结合 **PowerContext 的持久任务状态**构造上下文；通过 MiniMax HTTP 接口生成受限文件修改，并保存可核对的开发及验证记录。
 
-**当前交付状态见 [SUBMISSION_STATUS.md](SUBMISSION_STATUS.md)。参考实现的通过结果不代表已经完成 MiniMax 验收。**
+**已完成真实 MiniMax 开发与本地验收。** 交付记录使用 `MiniMax-M3.1-Flash` 实际生成代码，目标 21 项、回归 8 项、模块 12 项测试通过。评审使用下方 `recorded` 命令即可从空数据库重现结果，**无需密钥，也不会再次调用模型**。六项必做项的证据索引见 [SUBMISSION_STATUS.md](SUBMISSION_STATUS.md)。
 
 ## 1. 环境与安装
 
@@ -20,19 +20,19 @@ uv pip install --python .venv/bin/python --no-deps -e .
 source .venv/bin/activate
 ```
 
-也可以用 Python 3.11 的 `venv` 和 `pip` 安装同一份锁定依赖。首次安装需要访问 PyPI；此后参考验证不需要模型或网络。
+也可以用 Python 3.11 的 `venv` 和 `pip` 安装同一份锁定依赖。Git 用于记录代码基线；首次安装需要访问 PyPI，此后重放已交付记录不需要模型或网络。
 
-## 2. 一条命令验证本地完整流程
+## 2. 一条命令重现完整验收流程
 
 以下命令创建全新运行目录，不覆盖已有项目或任务状态。目录必须尚不存在；再次运行请换一个目录名。
 
 ```bash
-python scripts/demo.py --mode reference --run-dir /tmp/sdd-reference-demo
+python scripts/demo.py --mode recorded --run-dir /tmp/sdd-recorded-demo
 ```
 
-该模式明确标记为 `Codex-reference-NOT-MiniMax`。它验证导入、检索、修改前后测试、跨进程恢复、规格更新和旧验证失效；**不能作为 MiniMax 使用证明**。
+该模式核对已交付的 `evidence/live/minimax/response.json`，将其中真实 MiniMax 代码响应应用到修改前工程，并重新运行全部流程。会验证导入、数据库检索、修改前后测试、跨进程恢复、规格更新、旧验证失效和重新验证。不会把重放记录伪装成一次新的模型调用。
 
-输出在 `/tmp/sdd-reference-demo/evidence/`：
+输出在 `/tmp/sdd-recorded-demo/evidence/`：
 
 - `before-target.log`：同一组 21 项目标测试在修改前 20 失败、1 通过，失败是断言或未抛出 ValueError，回归 8 项通过。
 - `after-target.log`、`after-regression.log`：修改后目标 21 项和回归 8 项通过。
@@ -42,6 +42,8 @@ python scripts/demo.py --mode reference --run-dir /tmp/sdd-reference-demo
 - `technology-events.jsonl`：seekdb 写入和查询、PowerContext 写入与读取记录，包含不同进程 PID 和准确记录引用。
 - `commands.json`、`before.json`、`after.json`、`spec-v2.json`：命令、退出码、Git 基线、代码文件 SHA-256、测试文件 SHA-256。
 - `acceptance.json`：明确标明该运行是否实际使用 MiniMax。
+
+已交付的 `evidence/live/` 保留真实开发过程：`minimax/request.json` 是提供给模型的任务和完整上下文，`minimax/response.json` 是实际代码响应及模型标识、用量和耗时。`sample/catalog/service.py` 与该响应中的代码逐字一致；测试文件在修改前后保持同一 SHA-256。
 
 模块自身的测试：
 
@@ -69,13 +71,17 @@ python scripts/demo.py --mode live --env-file .env --run-dir /tmp/sdd-minimax-li
 
 成功后，`evidence/minimax/request.json` 保存实际任务和输入上下文，`response.json` 保存模型及请求标识、用量、耗时、代码响应、上下文快照及请求哈希。不会保存认证请求头或模型私有思维链。
 
-将成功运行的 `evidence/` 内容放入本仓库 `minimax/evidence/live/`。在没有密钥的干净环境中，可以重放该已记录的真实代码修改并重新执行全部测试：
+如需重新开展一次真实模型开发，成功后将运行目录中的 `evidence/` 内容保存到自己的交付目录。已交付的这一次开发记录，可在没有密钥的干净环境中重放：
 
 ```bash
 python scripts/demo.py --mode recorded --run-dir /tmp/sdd-recorded-demo
 ```
 
 `recorded` 会核对记录来自 MiniMax、HTTP 成功以及源快照一致；不会再次调用模型。它不假装产生一次新模型调用。如果缺少真实记录，会直接失败，不会悄悄改用参考补丁。评审不需要让模型再次生成相同补丁。
+
+如果 WSL 访问模型接口超时，可为本次进程配置可用的 `HTTPS_PROXY` / `HTTP_PROXY` 后重试；代理地址由自己的网络环境确定。已交付记录的离线重放不需要代理或密钥。
+
+用于比较的 Codex 参考实现也予以保留，可运行 `python scripts/demo.py --mode reference --run-dir /tmp/sdd-reference-demo`。该模式明确标记为 `Codex-reference-NOT-MiniMax`，不计入 MiniMax 使用记录；主验收入口始终是上方的 `recorded` 模式。
 
 ## 4. CLI 输入和输出
 

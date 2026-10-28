@@ -1,0 +1,56 @@
+{
+  "state": {
+    "completed": [
+      "retrieve-current-context"
+    ],
+    "todo": [
+      "implement-min-stock",
+      "run-target-and-regression-tests"
+    ],
+    "verification": {
+      "snapshot": "f1b39f107acffff23d73fe224ca532639e3ebc51e4c8a318f4eb8f888edb80db",
+      "task_sha256": "bdf9eabc84ef9f53d77a1c0b4bc38de7a6e68fd83d8050ad34a8546a5546a15d",
+      "passed": false,
+      "label": "before",
+      "results": {
+        "target": {
+          "command": [
+            "python",
+            "-m",
+            "pytest",
+            "-q",
+            "-p",
+            "no:cacheprovider",
+            "tests/test_min_stock.py"
+          ],
+          "cwd": "sample-project",
+          "exit_code": 1,
+          "log": "before-target.log",
+          "summary": "20 failed, 1 passed in 0.04s"
+        },
+        "regression": {
+          "command": [
+            "python",
+            "-m",
+            "pytest",
+            "-q",
+            "-p",
+            "no:cacheprovider",
+            "tests/test_regression.py"
+          ],
+          "cwd": "sample-project",
+          "exit_code": 0,
+          "log": "before-regression.log",
+          "summary": "8 passed in 0.01s"
+        }
+      }
+    },
+    "saved_at": "2026-10-28T06:36:58.730031+00:00",
+    "note": "Baseline ran; implement requested behavior next."
+  },
+  "reference": {
+    "family": "atomic-memory",
+    "artifact_id": "art_f9eab78e5f9b45acb45c501e091b1ad9",
+    "revision": 1
+  }
+}

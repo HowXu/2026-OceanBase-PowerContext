@@ -1,0 +1,18 @@
+{
+  "mode": "live",
+  "code_provider": "MiniMax-live",
+  "minimax_actual_participation": true,
+  "local_checks_passed": true,
+  "six_requirements_complete": true,
+  "tests_unchanged_sha256": {
+    "tests/conftest.py": "1d11fdb80225708094a930ab37911d5cb8bae02adf380eb6ceaa2f990ea16d4e",
+    "tests/test_min_stock.py": "35462c2677b579a155380e5f49f5f02df9de70f3c46187507dbfc625d325974f",
+    "tests/test_regression.py": "d92903b091f478f8cd9092130ba21f3a68c1cce6530c7e649fbf62343ced39bd"
+  },
+  "versions": {
+    "powercontext": "1.4.0",
+    "pylibseekdb": "1.4.0.post1",
+    "pytest": "8.4.2",
+    "httpx": "0.28.1"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "scope": "inventory-catalog",
+  "version": 1,
+  "requirements": [
+    {"id": "INV-001", "status": "active", "text": "Add optional min_stock to list_products. None preserves the legacy result; otherwise retain products with stock >= min_stock (inclusive). Zero is valid and there is no upper bound.", "code": ["catalog/service.py#list_products"], "tests": ["tests/test_min_stock.py"]},
+    {"id": "INV-002", "status": "active", "text": "min_stock must be a non-negative built-in integer. Reject negative integers, booleans, floats, strings and containers with ValueError mentioning min_stock. Validate even for empty product input.", "code": ["catalog/service.py#list_products"], "tests": ["tests/test_min_stock.py"]},
+    {"id": "INV-003", "status": "active", "text": "Preserve input order and never mutate input. Existing query is a Unicode casefold substring match. Inactive products are hidden by default; include_inactive=True reveals them. All filters compose with logical AND.", "code": ["catalog/service.py#Product", "catalog/service.py#list_products"], "tests": ["tests/test_regression.py", "tests/test_min_stock.py"]},
+    {"id": "INV-OLD", "status": "retired", "text": "Obsolete decision: min_stock is a strict greater-than comparison. This decision is retired and must never constrain the task.", "code": ["catalog/service.py#list_products"], "tests": []}
+  ]
+}
+
