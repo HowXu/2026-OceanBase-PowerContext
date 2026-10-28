@@ -1,0 +1,40 @@
+{
+  "model": {
+    "id": "Xenova/bge-small-zh-v1.5",
+    "revision": "75c43b069aac4d136ba6bc1122f995fedcfd2781",
+    "dimension": 512,
+    "pooling": "cls",
+    "normalize": true,
+    "queryPrefix": "为这个句子生成表示以用于检索相关文章："
+  },
+  "environment": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+  "records": [
+    {
+      "at": "2026-10-28T12:18:59.205Z",
+      "type": "import",
+      "collection": "kb_e13276f5cfef07852940d7ea",
+      "precision": "q8",
+      "backend": "wasm",
+      "batchSize": 8,
+      "modelLoadMs": 143.1450000014156,
+      "warmupMs": 7.950000001117587,
+      "embeddingMs": 293,
+      "writeMs": 251.68960000000152,
+      "refreshMs": 520.6707999999999,
+      "endToEndMs": 4061.0999999996275,
+      "chunks": 20
+    },
+    {
+      "at": "2026-10-28T12:19:45.156Z",
+      "type": "search",
+      "collection": "kb_e13276f5cfef07852940d7ea",
+      "query": "浏览器没有可用 GPU 还能计算向量吗？",
+      "backend": "wasm",
+      "precision": "q8",
+      "modelLoadMs": 0,
+      "queryEmbeddingMs": 18.969999998807907,
+      "searchMs": 93.8582000000024,
+      "endToEndMs": 153.94500000029802
+    }
+  ]
+}

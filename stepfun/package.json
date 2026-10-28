@@ -1,0 +1,37 @@
+{
+  "name": "stepfun-local-knowledge",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22.12" },
+  "scripts": {
+    "predev": "node scripts/copy-runtime.mjs",
+    "dev": "tsx server/index.ts --dev",
+    "prebuild": "node scripts/copy-runtime.mjs",
+    "build": "tsc --noEmit && vite build",
+    "start": "tsx server/index.ts",
+    "test": "tsx --test tests/*.test.ts",
+    "models:download": "node scripts/download-models.mjs",
+    "db:check": "tsx scripts/check-db.ts",
+    "db:download": "node scripts/download-bindings.mjs",
+    "test:db": "tsx scripts/verify-db.ts"
+  },
+  "dependencies": {
+    "@huggingface/transformers": "3.8.1",
+    "dotenv": "16.6.1",
+    "express": "5.1.0",
+    "seekdb": "1.4.0",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@types/express": "5.0.3",
+    "@types/node": "24.10.0",
+    "tsx": "4.20.6",
+    "typescript": "5.9.3",
+    "vite": "7.3.7"
+  },
+  "overrides": {
+    "adm-zip": "0.6.1",
+    "sharp": "0.35.5"
+  }
+}
