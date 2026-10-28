@@ -1,0 +1,14 @@
+{
+  "snapshot": "f1b39f107acffff23d73fe224ca532639e3ebc51e4c8a318f4eb8f888edb80db",
+  "documents": 29,
+  "files": {
+    "manifest.json": "0785ee55ce1e2dde9354575969f3c590a2ef0f1bbdd9a7a5968c1dfb6af73e8d",
+    "specs/catalog.json": "8828e7f4e04a6fb5b788f791aabd54808e8b8a71ddc91e31cc4a21f88521e2b7",
+    "catalog/service.py": "e3b930a13b2f98d1f0962931265d4ab0b382f89aac32075c25022d90981cc0f2",
+    "catalog/__main__.py": "5fc8d916694c7463506edd28370fd31c953b2f2f7cf18cd97e6a1ef9b3c7507c",
+    "tests/conftest.py": "1d11fdb80225708094a930ab37911d5cb8bae02adf380eb6ceaa2f990ea16d4e",
+    "tests/test_min_stock.py": "35462c2677b579a155380e5f49f5f02df9de70f3c46187507dbfc625d325974f",
+    "tests/test_regression.py": "d92903b091f478f8cd9092130ba21f3a68c1cce6530c7e649fbf62343ced39bd",
+    "products.json": "97f1d042818e97d08aa3d563b60060a4b61a1163c9abeaf1016fa7e39ec91ad4"
+  }
+}

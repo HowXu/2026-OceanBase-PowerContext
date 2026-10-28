@@ -103,10 +103,12 @@ def main():
 
     spec_path = project / "specs/catalog.json"
     spec = read_json(spec_path)
+    shutil.copyfile(spec_path, evidence / "specs-v1.json")
     old_text = spec["requirements"][2]["text"]
     spec["version"] = 2
     spec["requirements"][2]["text"] = old_text + " Equal-stock products also retain their original relative order."
     write_json(spec_path, spec)
+    shutil.copyfile(spec_path, evidence / "specs-v2.json")
     # Context must refuse disk changes until the explicit reimport.
     invoke("11-reject-unimported-spec", ["context"], expected=2)
     invoke("12-reimport-spec", ["ingest"])

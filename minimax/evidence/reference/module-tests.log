@@ -8,4 +8,4 @@ tests/test_context.py::test_powercontext_readback_and_task_isolation
     versions = dict((await connection.execute(select(LEXICAL_PROJECTION_VERSIONS_TABLE))).tuples().all())
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-12 passed, 4 warnings in 8.01s
+12 passed, 4 warnings in 9.09s
