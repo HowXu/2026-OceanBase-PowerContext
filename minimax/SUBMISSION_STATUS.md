@@ -15,5 +15,7 @@
 
 `evidence/reference/` 是参考验证及模块测试记录，清楚标记 `minimax_actual_participation=false`。`sample/catalog/service.py` 目前使用可运行的 Codex 参考实现；修改前代码保存在 `fixtures/before/service.py`。
 
+独立复现也已通过：从 `ce56638f0b0bb747e0b59c8d719dec4834be4fd2` 的源码归档建立全新虚拟环境，按锁定依赖安装，从空运行数据执行完整参考流程。记录在 `evidence/clean/`。目标 21 项、回归 8 项、模块 12 项均通过。
+
 下一步：在本机 `.env` 配置 MiniMax API Key，运行 README 的 live 命令。成功后用模型实际返回的代码更新样例及修改后快照，保存 `evidence/live/`，再次执行 recorded 模式和模块测试，更新本状态并推送固定提交。提交到比赛平台时还需选择对应参赛仓库中的分支或 commit hash；本聊天没有操作比赛平台。
 

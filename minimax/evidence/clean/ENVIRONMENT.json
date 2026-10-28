@@ -1,0 +1,19 @@
+{
+  "source_commit": "ce56638f0b0bb747e0b59c8d719dec4834be4fd2",
+  "source_preparation": "git archive of source_commit, extracted to a new Linux directory",
+  "environment": "new uv virtual environment, independent of the development environment",
+  "python": "3.11.15",
+  "install_commands": [
+    "uv venv --python 3.11 /tmp/sdd-clean-venv-ce56638",
+    "uv pip install --python /tmp/sdd-clean-venv-ce56638/bin/python -r /tmp/sdd-clean-source-ce56638/minimax/requirements.lock",
+    "uv pip install --python /tmp/sdd-clean-venv-ce56638/bin/python --no-deps -e /tmp/sdd-clean-source-ce56638/minimax"
+  ],
+  "install_exit_codes": [0, 0, 0],
+  "validation_commands": [
+    "python scripts/demo.py --mode reference --run-dir /tmp/sdd-clean-run-ce56638",
+    "python scripts/check.py --evidence-dir /tmp/sdd-clean-module-ce56638"
+  ],
+  "validation_exit_codes": [0, 0],
+  "minimax_actual_participation": false,
+  "note": "Dependency artifacts were available in the package cache. Runtime database and task state started empty. Per-command expected baseline failures are preserved in commands.json."
+}

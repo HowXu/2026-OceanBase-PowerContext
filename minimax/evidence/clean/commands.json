@@ -1,0 +1,258 @@
+[
+  {
+    "name": "01-ingest",
+    "command": [
+      "python",
+      "-m",
+      "sdd_context.cli",
+      "--task",
+      "/tmp/sdd-clean-run-ce56638/sample-project/task.json",
+      "--state-dir",
+      "/tmp/sdd-clean-run-ce56638/state",
+      "--output",
+      "/tmp/sdd-clean-run-ce56638/evidence/01-ingest.json",
+      "ingest"
+    ],
+    "exit_code": 0,
+    "expected_exit_code": 0
+  },
+  {
+    "name": "02-empty-state-context",
+    "command": [
+      "python",
+      "-m",
+      "sdd_context.cli",
+      "--task",
+      "/tmp/sdd-clean-run-ce56638/sample-project/task.json",
+      "--state-dir",
+      "/tmp/sdd-clean-run-ce56638/state",
+      "--output",
+      "/tmp/sdd-clean-run-ce56638/evidence/02-empty-state-context.json",
+      "context"
+    ],
+    "exit_code": 0,
+    "expected_exit_code": 0
+  },
+  {
+    "name": "03-baseline",
+    "command": [
+      "python",
+      "-m",
+      "sdd_context.cli",
+      "--task",
+      "/tmp/sdd-clean-run-ce56638/sample-project/task.json",
+      "--state-dir",
+      "/tmp/sdd-clean-run-ce56638/state",
+      "--output",
+      "/tmp/sdd-clean-run-ce56638/evidence/03-baseline.json",
+      "verify",
+      "--label",
+      "before",
+      "--evidence-dir",
+      "/tmp/sdd-clean-run-ce56638/evidence"
+    ],
+    "exit_code": 1,
+    "expected_exit_code": 1
+  },
+  {
+    "name": "04-save-progress",
+    "command": [
+      "python",
+      "-m",
+      "sdd_context.cli",
+      "--task",
+      "/tmp/sdd-clean-run-ce56638/sample-project/task.json",
+      "--state-dir",
+      "/tmp/sdd-clean-run-ce56638/state",
+      "--output",
+      "/tmp/sdd-clean-run-ce56638/evidence/04-save-progress.json",
+      "checkpoint",
+      "--done",
+      "retrieve-current-context",
+      "--note",
+      "Baseline ran; implement requested behavior next."
+    ],
+    "exit_code": 0,
+    "expected_exit_code": 0
+  },
+  {
+    "name": "05-restarted-context",
+    "command": [
+      "python",
+      "-m",
+      "sdd_context.cli",
+      "--task",
+      "/tmp/sdd-clean-run-ce56638/sample-project/task.json",
+      "--state-dir",
+      "/tmp/sdd-clean-run-ce56638/state",
+      "--output",
+      "/tmp/sdd-clean-run-ce56638/evidence/05-restarted-context.json",
+      "context"
+    ],
+    "exit_code": 0,
+    "expected_exit_code": 0
+  },
+  {
+    "name": "07-ingest-modification",
+    "command": [
+      "python",
+      "-m",
+      "sdd_context.cli",
+      "--task",
+      "/tmp/sdd-clean-run-ce56638/sample-project/task.json",
+      "--state-dir",
+      "/tmp/sdd-clean-run-ce56638/state",
+      "--output",
+      "/tmp/sdd-clean-run-ce56638/evidence/07-ingest-modification.json",
+      "ingest"
+    ],
+    "exit_code": 0,
+    "expected_exit_code": 0
+  },
+  {
+    "name": "08-after",
+    "command": [
+      "python",
+      "-m",
+      "sdd_context.cli",
+      "--task",
+      "/tmp/sdd-clean-run-ce56638/sample-project/task.json",
+      "--state-dir",
+      "/tmp/sdd-clean-run-ce56638/state",
+      "--output",
+      "/tmp/sdd-clean-run-ce56638/evidence/08-after.json",
+      "verify",
+      "--label",
+      "after",
+      "--evidence-dir",
+      "/tmp/sdd-clean-run-ce56638/evidence"
+    ],
+    "exit_code": 0,
+    "expected_exit_code": 0
+  },
+  {
+    "name": "09-save-completion",
+    "command": [
+      "python",
+      "-m",
+      "sdd_context.cli",
+      "--task",
+      "/tmp/sdd-clean-run-ce56638/sample-project/task.json",
+      "--state-dir",
+      "/tmp/sdd-clean-run-ce56638/state",
+      "--output",
+      "/tmp/sdd-clean-run-ce56638/evidence/09-save-completion.json",
+      "checkpoint",
+      "--done",
+      "implement-min-stock"
+    ],
+    "exit_code": 0,
+    "expected_exit_code": 0
+  },
+  {
+    "name": "10-restarted-verified-context",
+    "command": [
+      "python",
+      "-m",
+      "sdd_context.cli",
+      "--task",
+      "/tmp/sdd-clean-run-ce56638/sample-project/task.json",
+      "--state-dir",
+      "/tmp/sdd-clean-run-ce56638/state",
+      "--output",
+      "/tmp/sdd-clean-run-ce56638/evidence/10-restarted-verified-context.json",
+      "context"
+    ],
+    "exit_code": 0,
+    "expected_exit_code": 0
+  },
+  {
+    "name": "11-reject-unimported-spec",
+    "command": [
+      "python",
+      "-m",
+      "sdd_context.cli",
+      "--task",
+      "/tmp/sdd-clean-run-ce56638/sample-project/task.json",
+      "--state-dir",
+      "/tmp/sdd-clean-run-ce56638/state",
+      "--output",
+      "/tmp/sdd-clean-run-ce56638/evidence/11-reject-unimported-spec.json",
+      "context"
+    ],
+    "exit_code": 2,
+    "expected_exit_code": 2
+  },
+  {
+    "name": "12-reimport-spec",
+    "command": [
+      "python",
+      "-m",
+      "sdd_context.cli",
+      "--task",
+      "/tmp/sdd-clean-run-ce56638/sample-project/task.json",
+      "--state-dir",
+      "/tmp/sdd-clean-run-ce56638/state",
+      "--output",
+      "/tmp/sdd-clean-run-ce56638/evidence/12-reimport-spec.json",
+      "ingest"
+    ],
+    "exit_code": 0,
+    "expected_exit_code": 0
+  },
+  {
+    "name": "13-updated-spec-context",
+    "command": [
+      "python",
+      "-m",
+      "sdd_context.cli",
+      "--task",
+      "/tmp/sdd-clean-run-ce56638/sample-project/task.json",
+      "--state-dir",
+      "/tmp/sdd-clean-run-ce56638/state",
+      "--output",
+      "/tmp/sdd-clean-run-ce56638/evidence/13-updated-spec-context.json",
+      "context"
+    ],
+    "exit_code": 0,
+    "expected_exit_code": 0
+  },
+  {
+    "name": "14-revalidate-updated-spec",
+    "command": [
+      "python",
+      "-m",
+      "sdd_context.cli",
+      "--task",
+      "/tmp/sdd-clean-run-ce56638/sample-project/task.json",
+      "--state-dir",
+      "/tmp/sdd-clean-run-ce56638/state",
+      "--output",
+      "/tmp/sdd-clean-run-ce56638/evidence/14-revalidate-updated-spec.json",
+      "verify",
+      "--label",
+      "spec-v2",
+      "--evidence-dir",
+      "/tmp/sdd-clean-run-ce56638/evidence"
+    ],
+    "exit_code": 0,
+    "expected_exit_code": 0
+  },
+  {
+    "name": "15-final-restarted-context",
+    "command": [
+      "python",
+      "-m",
+      "sdd_context.cli",
+      "--task",
+      "/tmp/sdd-clean-run-ce56638/sample-project/task.json",
+      "--state-dir",
+      "/tmp/sdd-clean-run-ce56638/state",
+      "--output",
+      "/tmp/sdd-clean-run-ce56638/evidence/15-final-restarted-context.json",
+      "context"
+    ],
+    "exit_code": 0,
+    "expected_exit_code": 0
+  }
+]

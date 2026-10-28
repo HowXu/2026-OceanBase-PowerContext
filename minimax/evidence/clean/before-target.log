@@ -1,0 +1,268 @@
+F.FFFFFFFFFFFFFFFFFFF                                                    [100%]
+=================================== FAILURES ===================================
+___________________________ test_inclusive_threshold ___________________________
+
+products = [Product(sku='A', name='Ocean Notebook', stock=0, active=True), Product(sku='B', name='Blue Pen', stock=5, active=True...uct(sku='D', name='Old Ocean Pen', stock=8, active=False), Product(sku='E', name='Straße Paper', stock=5, active=True)]
+
+    def test_inclusive_threshold(products):
+>       assert [p.sku for p in list_products(products, min_stock=5)] == ["B", "C", "E"]
+E       AssertionError: assert ['A', 'B', 'C', 'E'] == ['B', 'C', 'E']
+E         
+E         At index 0 diff: 'A' != 'B'
+E         Left contains one more item: 'E'
+E         Use -v to get more diff
+
+tests/test_min_stock.py:9: AssertionError
+_____________________________ test_above_all_stock _____________________________
+
+products = [Product(sku='A', name='Ocean Notebook', stock=0, active=True), Product(sku='B', name='Blue Pen', stock=5, active=True...uct(sku='D', name='Old Ocean Pen', stock=8, active=False), Product(sku='E', name='Straße Paper', stock=5, active=True)]
+
+    def test_above_all_stock(products):
+>       assert list_products(products, min_stock=11) == []
+E       AssertionError: assert [Product(sku=... active=True)] == []
+E         
+E         Left contains 4 more items, first extra item: Product(sku='A', name='Ocean Notebook', stock=0, active=True)
+E         Use -v to get more diff
+
+tests/test_min_stock.py:17: AssertionError
+_____________________________ test_filters_compose _____________________________
+
+products = [Product(sku='A', name='Ocean Notebook', stock=0, active=True), Product(sku='B', name='Blue Pen', stock=5, active=True...uct(sku='D', name='Old Ocean Pen', stock=8, active=False), Product(sku='E', name='Straße Paper', stock=5, active=True)]
+
+    def test_filters_compose(products):
+>       assert [p.sku for p in list_products(products, query="oCeAn", min_stock=5)] == ["C"]
+E       AssertionError: assert ['A', 'C'] == ['C']
+E         
+E         At index 0 diff: 'A' != 'C'
+E         Left contains one more item: 'C'
+E         Use -v to get more diff
+
+tests/test_min_stock.py:21: AssertionError
+__________________________ test_can_include_inactive ___________________________
+
+products = [Product(sku='A', name='Ocean Notebook', stock=0, active=True), Product(sku='B', name='Blue Pen', stock=5, active=True...uct(sku='D', name='Old Ocean Pen', stock=8, active=False), Product(sku='E', name='Straße Paper', stock=5, active=True)]
+
+    def test_can_include_inactive(products):
+>       assert [p.sku for p in list_products(products, include_inactive=True, min_stock=8)] == ["C", "D"]
+E       AssertionError: assert ['A', 'B', 'C', 'D', 'E'] == ['C', 'D']
+E         
+E         At index 0 diff: 'A' != 'C'
+E         Left contains 3 more items, first extra item: 'C'
+E         Use -v to get more diff
+
+tests/test_min_stock.py:25: AssertionError
+_________________ test_invalid_threshold_is_rejected[False--1] _________________
+
+products = [Product(sku='A', name='Ocean Notebook', stock=0, active=True), Product(sku='B', name='Blue Pen', stock=5, active=True...uct(sku='D', name='Old Ocean Pen', stock=8, active=False), Product(sku='E', name='Straße Paper', stock=5, active=True)]
+value = -1, empty = False
+
+    @pytest.mark.parametrize("value", [-1, True, False, 1.5, "5", [], {}])
+    @pytest.mark.parametrize("empty", [False, True])
+    def test_invalid_threshold_is_rejected(products, value, empty):
+>       with pytest.raises(ValueError, match="min_stock"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_min_stock.py:31: Failed
+________________ test_invalid_threshold_is_rejected[False-True] ________________
+
+products = [Product(sku='A', name='Ocean Notebook', stock=0, active=True), Product(sku='B', name='Blue Pen', stock=5, active=True...uct(sku='D', name='Old Ocean Pen', stock=8, active=False), Product(sku='E', name='Straße Paper', stock=5, active=True)]
+value = True, empty = False
+
+    @pytest.mark.parametrize("value", [-1, True, False, 1.5, "5", [], {}])
+    @pytest.mark.parametrize("empty", [False, True])
+    def test_invalid_threshold_is_rejected(products, value, empty):
+>       with pytest.raises(ValueError, match="min_stock"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_min_stock.py:31: Failed
+_______________ test_invalid_threshold_is_rejected[False-False] ________________
+
+products = [Product(sku='A', name='Ocean Notebook', stock=0, active=True), Product(sku='B', name='Blue Pen', stock=5, active=True...uct(sku='D', name='Old Ocean Pen', stock=8, active=False), Product(sku='E', name='Straße Paper', stock=5, active=True)]
+value = False, empty = False
+
+    @pytest.mark.parametrize("value", [-1, True, False, 1.5, "5", [], {}])
+    @pytest.mark.parametrize("empty", [False, True])
+    def test_invalid_threshold_is_rejected(products, value, empty):
+>       with pytest.raises(ValueError, match="min_stock"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_min_stock.py:31: Failed
+________________ test_invalid_threshold_is_rejected[False-1.5] _________________
+
+products = [Product(sku='A', name='Ocean Notebook', stock=0, active=True), Product(sku='B', name='Blue Pen', stock=5, active=True...uct(sku='D', name='Old Ocean Pen', stock=8, active=False), Product(sku='E', name='Straße Paper', stock=5, active=True)]
+value = 1.5, empty = False
+
+    @pytest.mark.parametrize("value", [-1, True, False, 1.5, "5", [], {}])
+    @pytest.mark.parametrize("empty", [False, True])
+    def test_invalid_threshold_is_rejected(products, value, empty):
+>       with pytest.raises(ValueError, match="min_stock"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_min_stock.py:31: Failed
+_________________ test_invalid_threshold_is_rejected[False-5] __________________
+
+products = [Product(sku='A', name='Ocean Notebook', stock=0, active=True), Product(sku='B', name='Blue Pen', stock=5, active=True...uct(sku='D', name='Old Ocean Pen', stock=8, active=False), Product(sku='E', name='Straße Paper', stock=5, active=True)]
+value = '5', empty = False
+
+    @pytest.mark.parametrize("value", [-1, True, False, 1.5, "5", [], {}])
+    @pytest.mark.parametrize("empty", [False, True])
+    def test_invalid_threshold_is_rejected(products, value, empty):
+>       with pytest.raises(ValueError, match="min_stock"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_min_stock.py:31: Failed
+_______________ test_invalid_threshold_is_rejected[False-value5] _______________
+
+products = [Product(sku='A', name='Ocean Notebook', stock=0, active=True), Product(sku='B', name='Blue Pen', stock=5, active=True...uct(sku='D', name='Old Ocean Pen', stock=8, active=False), Product(sku='E', name='Straße Paper', stock=5, active=True)]
+value = [], empty = False
+
+    @pytest.mark.parametrize("value", [-1, True, False, 1.5, "5", [], {}])
+    @pytest.mark.parametrize("empty", [False, True])
+    def test_invalid_threshold_is_rejected(products, value, empty):
+>       with pytest.raises(ValueError, match="min_stock"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_min_stock.py:31: Failed
+_______________ test_invalid_threshold_is_rejected[False-value6] _______________
+
+products = [Product(sku='A', name='Ocean Notebook', stock=0, active=True), Product(sku='B', name='Blue Pen', stock=5, active=True...uct(sku='D', name='Old Ocean Pen', stock=8, active=False), Product(sku='E', name='Straße Paper', stock=5, active=True)]
+value = {}, empty = False
+
+    @pytest.mark.parametrize("value", [-1, True, False, 1.5, "5", [], {}])
+    @pytest.mark.parametrize("empty", [False, True])
+    def test_invalid_threshold_is_rejected(products, value, empty):
+>       with pytest.raises(ValueError, match="min_stock"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_min_stock.py:31: Failed
+_________________ test_invalid_threshold_is_rejected[True--1] __________________
+
+products = [Product(sku='A', name='Ocean Notebook', stock=0, active=True), Product(sku='B', name='Blue Pen', stock=5, active=True...uct(sku='D', name='Old Ocean Pen', stock=8, active=False), Product(sku='E', name='Straße Paper', stock=5, active=True)]
+value = -1, empty = True
+
+    @pytest.mark.parametrize("value", [-1, True, False, 1.5, "5", [], {}])
+    @pytest.mark.parametrize("empty", [False, True])
+    def test_invalid_threshold_is_rejected(products, value, empty):
+>       with pytest.raises(ValueError, match="min_stock"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_min_stock.py:31: Failed
+________________ test_invalid_threshold_is_rejected[True-True] _________________
+
+products = [Product(sku='A', name='Ocean Notebook', stock=0, active=True), Product(sku='B', name='Blue Pen', stock=5, active=True...uct(sku='D', name='Old Ocean Pen', stock=8, active=False), Product(sku='E', name='Straße Paper', stock=5, active=True)]
+value = True, empty = True
+
+    @pytest.mark.parametrize("value", [-1, True, False, 1.5, "5", [], {}])
+    @pytest.mark.parametrize("empty", [False, True])
+    def test_invalid_threshold_is_rejected(products, value, empty):
+>       with pytest.raises(ValueError, match="min_stock"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_min_stock.py:31: Failed
+________________ test_invalid_threshold_is_rejected[True-False] ________________
+
+products = [Product(sku='A', name='Ocean Notebook', stock=0, active=True), Product(sku='B', name='Blue Pen', stock=5, active=True...uct(sku='D', name='Old Ocean Pen', stock=8, active=False), Product(sku='E', name='Straße Paper', stock=5, active=True)]
+value = False, empty = True
+
+    @pytest.mark.parametrize("value", [-1, True, False, 1.5, "5", [], {}])
+    @pytest.mark.parametrize("empty", [False, True])
+    def test_invalid_threshold_is_rejected(products, value, empty):
+>       with pytest.raises(ValueError, match="min_stock"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_min_stock.py:31: Failed
+_________________ test_invalid_threshold_is_rejected[True-1.5] _________________
+
+products = [Product(sku='A', name='Ocean Notebook', stock=0, active=True), Product(sku='B', name='Blue Pen', stock=5, active=True...uct(sku='D', name='Old Ocean Pen', stock=8, active=False), Product(sku='E', name='Straße Paper', stock=5, active=True)]
+value = 1.5, empty = True
+
+    @pytest.mark.parametrize("value", [-1, True, False, 1.5, "5", [], {}])
+    @pytest.mark.parametrize("empty", [False, True])
+    def test_invalid_threshold_is_rejected(products, value, empty):
+>       with pytest.raises(ValueError, match="min_stock"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_min_stock.py:31: Failed
+__________________ test_invalid_threshold_is_rejected[True-5] __________________
+
+products = [Product(sku='A', name='Ocean Notebook', stock=0, active=True), Product(sku='B', name='Blue Pen', stock=5, active=True...uct(sku='D', name='Old Ocean Pen', stock=8, active=False), Product(sku='E', name='Straße Paper', stock=5, active=True)]
+value = '5', empty = True
+
+    @pytest.mark.parametrize("value", [-1, True, False, 1.5, "5", [], {}])
+    @pytest.mark.parametrize("empty", [False, True])
+    def test_invalid_threshold_is_rejected(products, value, empty):
+>       with pytest.raises(ValueError, match="min_stock"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_min_stock.py:31: Failed
+_______________ test_invalid_threshold_is_rejected[True-value5] ________________
+
+products = [Product(sku='A', name='Ocean Notebook', stock=0, active=True), Product(sku='B', name='Blue Pen', stock=5, active=True...uct(sku='D', name='Old Ocean Pen', stock=8, active=False), Product(sku='E', name='Straße Paper', stock=5, active=True)]
+value = [], empty = True
+
+    @pytest.mark.parametrize("value", [-1, True, False, 1.5, "5", [], {}])
+    @pytest.mark.parametrize("empty", [False, True])
+    def test_invalid_threshold_is_rejected(products, value, empty):
+>       with pytest.raises(ValueError, match="min_stock"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_min_stock.py:31: Failed
+_______________ test_invalid_threshold_is_rejected[True-value6] ________________
+
+products = [Product(sku='A', name='Ocean Notebook', stock=0, active=True), Product(sku='B', name='Blue Pen', stock=5, active=True...uct(sku='D', name='Old Ocean Pen', stock=8, active=False), Product(sku='E', name='Straße Paper', stock=5, active=True)]
+value = {}, empty = True
+
+    @pytest.mark.parametrize("value", [-1, True, False, 1.5, "5", [], {}])
+    @pytest.mark.parametrize("empty", [False, True])
+    def test_invalid_threshold_is_rejected(products, value, empty):
+>       with pytest.raises(ValueError, match="min_stock"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_min_stock.py:31: Failed
+_________________________ test_large_integer_is_valid __________________________
+
+products = [Product(sku='A', name='Ocean Notebook', stock=0, active=True), Product(sku='B', name='Blue Pen', stock=5, active=True...uct(sku='D', name='Old Ocean Pen', stock=8, active=False), Product(sku='E', name='Straße Paper', stock=5, active=True)]
+
+    def test_large_integer_is_valid(products):
+>       assert list_products(products, min_stock=10**30) == []
+E       AssertionError: assert [Product(sku=... active=True)] == []
+E         
+E         Left contains 4 more items, first extra item: Product(sku='A', name='Ocean Notebook', stock=0, active=True)
+E         Use -v to get more diff
+
+tests/test_min_stock.py:36: AssertionError
+________________ test_integer_subclass_is_not_a_builtin_integer ________________
+
+products = [Product(sku='A', name='Ocean Notebook', stock=0, active=True), Product(sku='B', name='Blue Pen', stock=5, active=True...uct(sku='D', name='Old Ocean Pen', stock=8, active=False), Product(sku='E', name='Straße Paper', stock=5, active=True)]
+
+    def test_integer_subclass_is_not_a_builtin_integer(products):
+        class ThresholdInt(int):
+            pass
+    
+        for items in (products, []):
+>           with pytest.raises(ValueError, match="min_stock"):
+E           Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_min_stock.py:44: Failed
+=========================== short test summary info ============================
+FAILED tests/test_min_stock.py::test_inclusive_threshold - AssertionError: as...
+FAILED tests/test_min_stock.py::test_above_all_stock - AssertionError: assert...
+FAILED tests/test_min_stock.py::test_filters_compose - AssertionError: assert...
+FAILED tests/test_min_stock.py::test_can_include_inactive - AssertionError: a...
+FAILED tests/test_min_stock.py::test_invalid_threshold_is_rejected[False--1]
+FAILED tests/test_min_stock.py::test_invalid_threshold_is_rejected[False-True]
+FAILED tests/test_min_stock.py::test_invalid_threshold_is_rejected[False-False]
+FAILED tests/test_min_stock.py::test_invalid_threshold_is_rejected[False-1.5]
+FAILED tests/test_min_stock.py::test_invalid_threshold_is_rejected[False-5]
+FAILED tests/test_min_stock.py::test_invalid_threshold_is_rejected[False-value5]
+FAILED tests/test_min_stock.py::test_invalid_threshold_is_rejected[False-value6]
+FAILED tests/test_min_stock.py::test_invalid_threshold_is_rejected[True--1]
+FAILED tests/test_min_stock.py::test_invalid_threshold_is_rejected[True-True]
+FAILED tests/test_min_stock.py::test_invalid_threshold_is_rejected[True-False]
+FAILED tests/test_min_stock.py::test_invalid_threshold_is_rejected[True-1.5]
+FAILED tests/test_min_stock.py::test_invalid_threshold_is_rejected[True-5] - ...
+FAILED tests/test_min_stock.py::test_invalid_threshold_is_rejected[True-value5]
+FAILED tests/test_min_stock.py::test_invalid_threshold_is_rejected[True-value6]
+FAILED tests/test_min_stock.py::test_large_integer_is_valid - AssertionError:...
+FAILED tests/test_min_stock.py::test_integer_subclass_is_not_a_builtin_integer
+20 failed, 1 passed in 0.04s
