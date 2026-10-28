@@ -134,19 +134,100 @@ PDF_PAGE_SOURCE_DEFINITION: SourceDefinition[PDFPageInput, PDFPageSource, PDFPag
 _FINANCIAL_EXPANSIONS = {
     "geography": "geographic geographical countries regions international",
     "operate": "operating operations segments divisions business",
-    "quick ratio": "cash receivables marketable securities current liabilities",
-    "current ratio": "current assets liabilities",
-    "working capital": "current assets liabilities",
+    "quick ratio": "cash receivables marketable securities current liabilities balance sheet",
+    "current ratio": "current assets liabilities balance sheet",
+    "working capital": "current assets liabilities balance sheet",
     "free cash flow": "operating activities capital expenditures property equipment",
     "debt equity": "debt liabilities equity stockholders shareholders",
     "profit margin": "income earnings revenue sales",
-    "gross margin": "gross profit revenue sales cost",
+    "gross margin": "gross profit revenue sales cost income statement operations",
+    "operating margin": "operating income profit revenue expenses statement operations",
+    "effective tax rate": "income tax pretax earnings statement operations",
     "return assets": "net income total assets",
     "return equity": "net income equity stockholders shareholders",
     "dividend payout": "dividends net income earnings",
     "capital expenditure": "property plant equipment additions purchases",
+    "capex": "capital expenditures property equipment",
+    "ebitda": "operating income depreciation amortization",
+    "legal": "litigation proceedings contingencies",
+    "cyclicality": "cyclical cycles demand economic",
+    "customer concentration": "customer customers revenue sales",
+    "product category": "business segments revenue sales",
+    "service category": "business segments revenue sales",
+    "card member": "cardmember cardmembers retention attrition",
+    "retain": "retention attrition",
 }
-_QUESTION_NOISE = frozenset({"according", "calculate", "company", "report", "annual", "much", "many", "fiscal", "year"})
+_STATEMENT_HEADING = re.compile(
+    r"^\s*(?:consolidated\s+)?(?:statements?\s+of\s+(?:income|operations|earnings|cash\s+flows?)|balance\s+sheets?)\b",
+    re.IGNORECASE | re.MULTILINE,
+)
+_QUESTION_NOISE = frozenset({
+    *(  # noqa: SIM905 - keep the conventional stop-word vocabulary readable as text
+        "a an and any are as at be been being between by can could did do does for from had has have how "
+        "if in into is it its like may more most not of on only or other our out over per s should so some "
+        "such than that the their them then there these they this those through to too under up us was we "
+        "were what when where which while who why will with within would you your"
+    ).split(),
+    "about",
+    "able",
+    "analyst",
+    "ask",
+    "based",
+    "changed",
+    "compare",
+    "declined",
+    "drove",
+    "explain",
+    "financial",
+    "healthy",
+    "improved",
+    "improving",
+    "important",
+    "investment",
+    "less",
+    "materially",
+    "measure",
+    "metric",
+    "ongoing",
+    "please",
+    "primarily",
+    "primary",
+    "profile",
+    "reasonably",
+    "relevant",
+    "according",
+    "answer",
+    "annual",
+    "assume",
+    "assuming",
+    "calculate",
+    "company",
+    "define",
+    "detail",
+    "directly",
+    "explicitly",
+    "fiscal",
+    "give",
+    "many",
+    "million",
+    "much",
+    "perspective",
+    "provide",
+    "quantity",
+    "question",
+    "rely",
+    "relying",
+    "report",
+    "reported",
+    "respond",
+    "response",
+    "shown",
+    "state",
+    "use",
+    "using",
+    "usd",
+    "year",
+})
 
 
 def _terms(value: str) -> tuple[str, ...]:
@@ -161,21 +242,52 @@ def _terms(value: str) -> tuple[str, ...]:
     )
 
 
+def _page_queries(question: str, expansions: list[str]) -> tuple[str, ...]:
+    # Each short query has at most two Analyzer terms, so an independent
+    # statement need not contain the vocabulary of every other statement.
+    queries = [question]
+    for text in (question, *expansions):
+        terms = tuple(
+            dict.fromkeys(
+                term
+                for term in analyze_fts_query(text).split()
+                if term not in _QUESTION_NOISE and not set(_terms(term)) & _QUESTION_NOISE
+            )
+        )
+        queries.extend(" ".join(terms[index : index + 2]) for index in range(0, len(terms), 2))
+    return tuple(dict.fromkeys(queries))[:13]
+
+
 def _rank_pages(hits: tuple[MemoryHit, ...], weights: dict[str, float]) -> list[MemoryHit]:
     documents = [Counter(_terms(hit.text)) for hit in hits]
     lengths = [sum(document.values()) for document in documents]
     average = sum(lengths) / len(lengths) if lengths else 1
     frequency = Counter(term for document in documents for term in document if term in weights)
-    scores = []
-    for document, length in zip(documents, lengths, strict=True):
+    scores, identities, headings = [], [], []
+    query_terms = tuple(weights)
+    query_identities = {
+        "".join(query_terms[index : index + width]) for index in range(len(query_terms)) for width in (1, 2, 3)
+    }
+    for hit, document, length in zip(hits, documents, lengths, strict=True):
+        document_id, _, body = hit.text.partition("\n")
+        name = re.split(r"[_\s-](?:19|20)\d{2}", document_id, maxsplit=1)[0]
+        identity = "".join(_terms(name))
+        identities.append(len(identity) >= 2 and identity in query_identities)
         score = 0.0
         for term, weight in weights.items():
             count = document[term]
             if count:
                 inverse = math.log1p((len(documents) - frequency[term] + 0.5) / (frequency[term] + 0.5))
                 score += weight * inverse * count * 2.2 / (count + 1.2 * (0.25 + 0.75 * length / max(average, 1)))
+        # Financial captions distinguish the underlying statements from prose
+        # mentioning several metrics. Only inspect the beginning of the page.
+        heading_terms = {term for match in _STATEMENT_HEADING.finditer(body[:240]) for term in _terms(match.group())}
+        headings.append(sum(weights.get(term, 0) for term in heading_terms))
         scores.append(score)
-    order = sorted(range(len(hits)), key=lambda index: (-scores[index], -hits[index].score, index))
+    order = sorted(
+        range(len(hits)),
+        key=lambda index: (-identities[index], -headings[index], -scores[index], -hits[index].score, index),
+    )
     return [hits[index] for index in order]
 
 
@@ -188,18 +300,22 @@ async def search_pdf_pages(
 
     if not question.strip() or type(limit) is not int or limit < 1:
         raise ValueError("PDF search requires a question and a positive integer limit")  # noqa: TRY003
-    weights = {term: 1.0 for term in _terms(analyze_fts_query(question)) if term not in _QUESTION_NOISE}
+    question = re.sub(r"\bfy\s*(\d{4})\b", r"\1", question, flags=re.IGNORECASE)
+    weights = {
+        term: 1.0
+        for token in analyze_fts_query(question).split()
+        if token not in _QUESTION_NOISE
+        for term in _terms(token)
+        if term not in _QUESTION_NOISE
+    }
     if not weights:
         return ()
     query_terms = set(_terms(question))
     expansions = [text for phrase, text in _FINANCIAL_EXPANSIONS.items() if set(_terms(phrase)) <= query_terms]
     for term in _terms(" ".join(expansions)):
         weights.setdefault(term, 0.35)
-    queries = [question]
-    if expansions:
-        queries.append(" ".join([question, *expansions]))
     candidates = {}
-    for query in queries:
+    for query in _page_queries(question, expansions):
         result = await memory.search(SearchMemoryRequest(query=query, mode="fts", limit=max(200, limit * 10)))
         for hit in result.hits:
             identity = (
