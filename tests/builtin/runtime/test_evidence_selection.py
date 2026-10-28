@@ -110,6 +110,19 @@ def test_default_mode_remains_the_existing_builder_result() -> None:
     assert default == explicit and default.fragments == ()
 
 
+@pytest.mark.parametrize("budget", [512, 900, 1400])
+def test_budget_probe_matches_the_delivered_selection(budget: int) -> None:
+    groups = (candidates("Administrative notes. " * 90 + "Cobalt calibration is 37 degrees."),)
+    request = PrepareContextRequest(query="cobalt calibration", evidence_selection=True, max_bytes=budget)
+    builder = PreparedContextBuilder()
+    result = builder.build_scopes_result(request=request, current_scope_id="scope", memory_candidates=groups)
+    probe = builder.probe_budget(request=request, current_scope_id="scope", memory_candidates=groups)
+    assert probe.delivered_items == len(result.origins)
+    assert probe.unused_bytes == budget - result.context.content_bytes
+    assert probe.truncated_items == result.omissions.truncated_items
+    assert probe.dropped_items == result.omissions.dropped_items
+
+
 @pytest.mark.parametrize("value", [None, 0, 1, "true"])
 def test_selection_flag_requires_an_actual_boolean(value) -> None:
     with pytest.raises(ValidationError):
