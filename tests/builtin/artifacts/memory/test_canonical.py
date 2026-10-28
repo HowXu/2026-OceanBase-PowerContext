@@ -81,6 +81,22 @@ def test_entry_hash_covers_kind_text_and_both_evidence_sets() -> None:
     ).startswith(b'{"artifact_refs"')
 
 
+def test_complete_source_evidence_uses_a_separate_utf8_bound_after_reference_normalization() -> None:
+    text = "界" * 21845 + "a"
+    reference = {"source_type": "pdf-page", "source_id": "page"}
+    assert len(text.encode("utf-8")) == 65536
+    assert normalize_text(text, source_evidence=True) == text
+    encoded = entry_content_bytes(kind="source-evidence", text=text, source_refs=(reference,), artifact_refs=())
+    assert (
+        entry_content_bytes(kind="source-evidence", text=text, source_refs=(reference, reference), artifact_refs=())
+        == encoded
+    )
+    with pytest.raises(ValueError, match="65536 UTF-8 bytes"):
+        entry_content_bytes(kind="source-evidence", text=text + "a", source_refs=(reference,), artifact_refs=())
+    with pytest.raises(ValueError, match="8192 UTF-8 bytes"):
+        entry_content_bytes(kind="fact", text=text, source_refs=(), artifact_refs=())
+
+
 def test_memory_hash_covers_complete_manifest_and_change_summary() -> None:
     entry = MemoryManifestEntry(
         entry_id="entry-a",

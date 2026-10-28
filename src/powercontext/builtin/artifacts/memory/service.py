@@ -30,6 +30,7 @@ from pydantic import BaseModel
 from powercontext._logging import log_safely
 from powercontext.artifacts import Artifact, ArtifactLineage, ArtifactRef
 from powercontext.builtin.artifacts.memory.canonical import (
+    MAX_MEMORY_TEXT_BYTES,
     canonical_embedding,
     canonical_error_code,
     canonical_json,
@@ -112,6 +113,7 @@ from powercontext.errors import RevisionConflictError
 from powercontext.sources import (
     TEXT_EVIDENCE_PROJECTION_KEY,
     Source,
+    SourceMaterialization,
     SourceObservation,
     SourceProjectionKey,
     SourceRef,
@@ -1443,7 +1445,9 @@ class MemoryService:
     def _source_gate_evidence(self, candidate_index: int, source: Source) -> _GateEvidenceEntry:
         ref = self._source_refs((source,))[0]
         identity = _candidate_gate_identity(candidate_index, f"source:{ref.source_type}:{ref.source_id}")
-        content = _source_gate_content(source, self._source_resolver)
+        content = getattr(source, "content", None)
+        if not isinstance(content, str):
+            content = _source_text_content(source, self._source_resolver)
         if isinstance(content, str) and content.strip():
             return _bounded_gate_evidence(identity, content)
         return _incomplete_gate_evidence(identity)
@@ -1654,9 +1658,24 @@ class MemoryService:
             sources = (*previous.sources, *candidate_source_refs)
             artifacts = (*previous.artifacts, *candidate_artifacts)
         try:
+            text = normalize_query(candidate.text)
+            if len(text.encode("utf-8")) > MAX_MEMORY_TEXT_BYTES:
+                content = None
+                if (
+                    len(candidate_sources) == 1
+                    and candidate_sources[0].materialization is SourceMaterialization.CAPTURED
+                ):
+                    content = _source_text_content(candidate_sources[0], self._source_resolver)
+                complete_source = bool(content and content.strip() and normalize_query(content) == text)
+                retained_source = (
+                    previous is not None
+                    and text == previous.text
+                    and _canonical_source_refs(sources) == previous.sources
+                )
+                normalize_text(text, source_evidence=complete_source or retained_source)
             return self._entry_material(
                 kind=candidate.kind,
-                text=candidate.text,
+                text=text,
                 sources=sources,
                 artifacts=artifacts,
             )
@@ -1717,9 +1736,9 @@ class MemoryService:
         artifacts: Sequence[ArtifactRef],
     ) -> _EntryMaterial:
         normalized_kind = normalize_kind(kind)
-        normalized_text = normalize_text(text)
         canonical_sources = _canonical_source_refs(sources)
         canonical_artifacts = _canonical_artifact_refs(artifacts)
+        normalized_text = normalize_text(text, source_evidence=len(canonical_sources) == 1 and not canonical_artifacts)
         source_refs = tuple(source.model_dump(mode="json") for source in canonical_sources)
         artifact_refs = tuple(artifact.model_dump(mode="json") for artifact in canonical_artifacts)
         content_bytes = entry_content_bytes(
@@ -1824,7 +1843,7 @@ def _raise_if_write_held(plan: MemoryWritePlan) -> None:
 
 
 def _bounded_gate_evidence(identity: str, content: str) -> _GateEvidenceEntry:
-    normalized = normalize_text(content)
+    normalized = normalize_query(content)
     return _GateEvidenceEntry(
         text=f"{identity}\n{normalized[:_GATE_EVIDENCE_TEXT_LIMIT]}",
         complete=len(normalized) <= _GATE_EVIDENCE_TEXT_LIMIT,
@@ -1839,10 +1858,7 @@ def _candidate_gate_identity(candidate_index: int, identity: str) -> str:
     return f"candidate:{candidate_index} {identity}"
 
 
-def _source_gate_content(source: Source, resolver: _SourceResolver | None) -> str | None:
-    content = getattr(source, "content", None)
-    if isinstance(content, str):
-        return content
+def _source_text_content(source: Source, resolver: _SourceResolver | None) -> str | None:
     if isinstance(source, SourceObservation):
         try:
             evidence = TextEvidence.model_validate(source.projection(TEXT_EVIDENCE_PROJECTION_KEY))

@@ -143,7 +143,12 @@ _FINANCIAL_EXPANSIONS = {
     "gross margin": "gross profit revenue sales cost income statement operations",
     "operating margin": "operating income profit revenue expenses statement operations",
     "effective tax rate": "income tax pretax earnings statement operations",
-    "return assets": "net income total assets",
+    "return assets": "net income total assets balance sheet",
+    "financial position": "balance sheet assets liabilities",
+    "capital intensive": "property plant equipment assets balance sheet revenue sales income cash flows",
+    "inventory turnover": "inventories cost sales balance sheet income statement operations",
+    "ppne": "property plant equipment balance sheet",
+    "growth": "revenue sales organic",
     "return equity": "net income equity stockholders shareholders",
     "dividend payout": "dividends net income earnings",
     "capital expenditure": "property plant equipment additions purchases",
@@ -151,14 +156,15 @@ _FINANCIAL_EXPANSIONS = {
     "ebitda": "operating income depreciation amortization",
     "legal": "litigation proceedings contingencies",
     "cyclicality": "cyclical cycles demand economic",
-    "customer concentration": "customer customers revenue sales",
+    "customer concentration": "customer customers revenue sales accounted share percent",
     "product category": "business segments revenue sales",
     "service category": "business segments revenue sales",
     "card member": "cardmember cardmembers retention attrition",
     "retain": "retention attrition",
 }
 _STATEMENT_HEADING = re.compile(
-    r"^\s*(?:consolidated\s+)?(?:statements?\s+of\s+(?:income|operations|earnings|cash\s+flows?)|balance\s+sheets?)\b",
+    r"^\s*(?:(?:consolidated\s+)?(?:statements?\s+of\s+(?:income|operations|earnings|cash\s+flows?)|balance\s+sheets?)"
+    r"|(?:summary\s+of\s+)?(?:business\s+|reportable\s+|operating\s+)?segments?(?:\s+(?:data|information))?)\b",
     re.IGNORECASE | re.MULTILINE,
 )
 _QUESTION_NOISE = frozenset({
@@ -246,47 +252,85 @@ def _page_queries(question: str, expansions: list[str]) -> tuple[str, ...]:
     # Each short query has at most two Analyzer terms, so an independent
     # statement need not contain the vocabulary of every other statement.
     queries = [question]
-    for text in (question, *expansions):
-        terms = tuple(
+    groups = [
+        tuple(
             dict.fromkeys(
                 term
                 for term in analyze_fts_query(text).split()
                 if term not in _QUESTION_NOISE and not set(_terms(term)) & _QUESTION_NOISE
             )
         )
-        queries.extend(" ".join(terms[index : index + 2]) for index in range(0, len(terms), 2))
+        for text in (question, *expansions)
+    ]
+    # Reserve candidate coverage for expansions even when the original question is long.
+    for index in range(0, max(map(len, groups)), 2):
+        queries.extend(" ".join(terms[index : index + 2]) for terms in groups if index < len(terms))
     return tuple(dict.fromkeys(queries))[:13]
 
 
-def _rank_pages(hits: tuple[MemoryHit, ...], weights: dict[str, float]) -> list[MemoryHit]:
-    documents = [Counter(_terms(hit.text)) for hit in hits]
+def _query_documents(hits: tuple[MemoryHit, ...], question: str) -> dict[str, set[str]]:
+    query_terms = _terms(question)
+    spans = {
+        "".join(query_terms[index : index + width]): set(query_terms[index : index + width])
+        for index in range(len(query_terms))
+        for width in (1, 2, 3, 4)
+    }
+    abbreviations = {
+        "".join(_terms(re.sub(r"(?<=[A-Z])n(?=[A-Z])", "", word))): set(_terms(word))
+        for word in re.findall(r"\b[A-Z][A-Za-z&.]{1,7}\b", question)
+        if sum(character.isupper() for character in word) >= 2
+    }
+    bodies = [hit.text.partition("\n") for hit in hits]
+    matched = {}
+    for document_id, _, _ in bodies:
+        name = re.split(r"[_\s-](?:19|20)\d{2}", document_id, maxsplit=1)[0]
+        terms = _terms(name)
+        identity = "".join(terms)
+        initials = "".join(term[0] for term in terms)
+        if len(identity) >= 2 and identity in spans:
+            matched[document_id] = spans[identity]
+        elif len(initials) >= 2 and initials in abbreviations:
+            matched[document_id] = abbreviations[initials]
+    if matched:
+        return matched
+    # Resolve an otherwise unknown abbreviation only when multiple candidate pages
+    # attest it in exactly one report; this does not contain a company alias table.
+    for abbreviation, terms in abbreviations.items():
+        documents = Counter(document_id for document_id, _, body in bodies if abbreviation in set(_terms(body)))
+        if len(documents) == 1:
+            document_id, count = documents.most_common(1)[0]
+            if count >= 2:
+                matched[document_id] = terms
+    return matched
+
+
+def _rank_pages(
+    hits: tuple[MemoryHit, ...], weights: dict[str, float], query_documents: dict[str, set[str]]
+) -> list[MemoryHit]:
+    bodies = [hit.text.partition("\n") for hit in hits]
+    documents = [Counter(_terms(body)) for _, _, body in bodies]
     lengths = [sum(document.values()) for document in documents]
     average = sum(lengths) / len(lengths) if lengths else 1
-    frequency = Counter(term for document in documents for term in document if term in weights)
-    scores, identities, headings = [], [], []
-    query_terms = tuple(weights)
-    query_identities = {
-        "".join(query_terms[index : index + width]) for index in range(len(query_terms)) for width in (1, 2, 3)
-    }
-    for hit, document, length in zip(hits, documents, lengths, strict=True):
-        document_id, _, body = hit.text.partition("\n")
-        name = re.split(r"[_\s-](?:19|20)\d{2}", document_id, maxsplit=1)[0]
-        identity = "".join(_terms(name))
-        identities.append(len(identity) >= 2 and identity in query_identities)
+    identities = [document_id in query_documents for document_id, _, _ in bodies]
+    identity_terms = {term for terms in query_documents.values() for term in terms}
+    periods = {term for term in weights if re.fullmatch(r"(?:19|20)\d{2}", term)}
+    topic_weights = {term: weight for term, weight in weights.items() if term not in identity_terms | periods}
+    frequency = Counter(term for document in documents for term in document if term in topic_weights)
+    scores = []
+    for (_, _, body), document, length in zip(bodies, documents, lengths, strict=True):
         score = 0.0
-        for term, weight in weights.items():
+        for term, weight in topic_weights.items():
             count = document[term]
             if count:
                 inverse = math.log1p((len(documents) - frequency[term] + 0.5) / (frequency[term] + 0.5))
-                score += weight * inverse * count * 2.2 / (count + 1.2 * (0.25 + 0.75 * length / max(average, 1)))
-        # Financial captions distinguish the underlying statements from prose
-        # mentioning several metrics. Only inspect the beginning of the page.
+                # Page lengths vary substantially; a short exhibit is not inherently better evidence.
+                score += weight * inverse * count * 2.2 / (count + 1.2 * (0.75 + 0.25 * length / max(average, 1)))
+        # Captions are a finite relevance signal, not a priority above all body evidence.
         heading_terms = {term for match in _STATEMENT_HEADING.finditer(body[:240]) for term in _terms(match.group())}
-        headings.append(sum(weights.get(term, 0) for term in heading_terms))
-        scores.append(score)
+        scores.append(score + 3 * sum(topic_weights.get(term, 0) for term in heading_terms))
     order = sorted(
         range(len(hits)),
-        key=lambda index: (-identities[index], -headings[index], -scores[index], -hits[index].score, index),
+        key=lambda index: (-identities[index], -scores[index], -hits[index].score, index),
     )
     return [hits[index] for index in order]
 
@@ -296,11 +340,16 @@ async def search_pdf_pages(
 ) -> tuple[MemoryCitation, ...]:
     """Search real scoped Memory candidates and return distinct exact PDF page anchors."""
 
-    from powercontext.builtin.runtime.models import GetMemoryEntryRequest, SearchMemoryRequest
+    from powercontext.builtin.runtime.models import GetMemoryEntryRequest
 
     if not question.strip() or type(limit) is not int or limit < 1:
         raise ValueError("PDF search requires a question and a positive integer limit")  # noqa: TRY003
-    question = re.sub(r"\bfy\s*(\d{4})\b", r"\1", question, flags=re.IGNORECASE)
+    question = re.sub(
+        r"\bfy\s*(\d{2}(?:\d{2})?)\b",
+        lambda match: match[1] if len(match[1]) == 4 else "20" + match[1],
+        question,
+        flags=re.IGNORECASE,
+    )
     weights = {
         term: 1.0
         for token in analyze_fts_query(question).split()
@@ -314,20 +363,9 @@ async def search_pdf_pages(
     expansions = [text for phrase, text in _FINANCIAL_EXPANSIONS.items() if set(_terms(phrase)) <= query_terms]
     for term in _terms(" ".join(expansions)):
         weights.setdefault(term, 0.35)
-    candidates = {}
-    for query in _page_queries(question, expansions):
-        result = await memory.search(SearchMemoryRequest(query=query, mode="fts", limit=max(200, limit * 10)))
-        for hit in result.hits:
-            identity = (
-                hit.memory_ref.family,
-                hit.memory_ref.artifact_id,
-                hit.memory_ref.revision,
-                hit.entry_id,
-                hit.entry_version_id,
-            )
-            candidates.setdefault(identity, hit)
+    hits, query_documents = await _page_candidates(memory, question, expansions, limit)
     selected, seen = [], set()
-    for hit in _rank_pages(tuple(candidates.values()), weights):
+    for hit in _rank_pages(hits, weights, query_documents):
         citation = MemoryCitation(
             memory_ref=hit.memory_ref, entry_id=hit.entry_id, entry_version_id=hit.entry_version_id
         )
@@ -340,6 +378,35 @@ async def search_pdf_pages(
         if len(selected) == limit:
             break
     return tuple(selected)
+
+
+async def _page_candidates(
+    memory: ScopedMemoryApplication, question: str, expansions: list[str], limit: int
+) -> tuple[tuple[MemoryHit, ...], dict[str, set[str]]]:
+    from powercontext.builtin.runtime.models import SearchMemoryRequest
+
+    candidates = {}
+
+    async def collect(query: str) -> None:
+        result = await memory.search(SearchMemoryRequest(query=query, mode="fts", limit=max(200, limit * 10)))
+        for hit in result.hits:
+            identity = (
+                hit.memory_ref.family,
+                hit.memory_ref.artifact_id,
+                hit.memory_ref.revision,
+                hit.entry_id,
+                hit.entry_version_id,
+            )
+            candidates.setdefault(identity, hit)
+
+    for query in _page_queries(question, expansions):
+        await collect(query)
+    query_documents = _query_documents(tuple(candidates.values()), question)
+    # The full document ID is already present in persisted evidence. A bounded
+    # identity query recovers pages whose body does not repeat the question's words.
+    for document_id in tuple(query_documents)[:3]:
+        await collect(document_id)
+    return tuple(candidates.values()), query_documents
 
 
 __all__ = [

@@ -230,6 +230,18 @@ def test_named_company_statement_pages_beat_other_reports_and_narrative_mentions
             "Is Enterprise subject to cyclicality?",
         ),
         (
+            "Property plant and equipment comprise most of total assets.",
+            "Is Enterprise a capital-intensive business in FY27?",
+        ),
+        (
+            "Inventories are measured against cost of sales in the consolidated statements.",
+            "What is Enterprise's inventory turnover ratio in FY27?",
+        ),
+        (
+            "Property plant and equipment increased compared with the prior period.",
+            "Did Enterprise grow its PPNE between FY26 and FY27?",
+        ),
+        (
             "One of our customers accounts for a significant share of revenue and sales.",
             "Did Enterprise report customer concentration in FY27?",
         ),

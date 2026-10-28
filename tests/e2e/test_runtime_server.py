@@ -776,6 +776,61 @@ def test_server_databases_share_vector_and_hybrid_search_behavior(
     asyncio.run(scenario())
 
 
+def test_sdk_preserves_complete_long_source_evidence_across_revisions_and_reopen(tmp_path: Path) -> None:
+    database = tmp_path / "long-evidence.db"
+    body = "Fullsource HTTP evidence. " + "界" * 3000
+    app = create_server_app(settings=_server_settings(database), candidate_pipeline=ContentCandidatePipeline())
+
+    async def scenario() -> None:
+        async with (
+            app.router.lifespan_context(app),
+            httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://testserver") as transport,
+        ):
+            client = PowerContextClient("http://testserver", http_client=transport, trust_transport_security=True)
+            scope_id = (await client.get_default_scope()).scope_id
+            await client.capture_content_source(
+                CaptureContentSourceRequest(scope_id=scope_id, source_id="long-evidence", content=body)
+            )
+            await client.flush_memory(FlushMemoryRequest(scope_id=scope_id))
+            search = await client.search_memory(
+                SearchMemoryRequest(scope_id=scope_id, query="Fullsource", mode=HttpMemorySearchMode.FTS)
+            )
+            assert len(search.hits) == 1 and search.hits[0].text == body
+            citation = search.hits[0].citation
+            revised = await client.revise_memory_entry(
+                ReviseMemoryEntryRequest(scope_id=scope_id, citation=citation, kind="source-evidence", text=body)
+            )
+            assert revised.entry is not None and revised.entry.text == body
+            with pytest.raises(ServerResponseError) as rejected:
+                await client.revise_memory_entry(
+                    ReviseMemoryEntryRequest(
+                        scope_id=scope_id,
+                        citation=revised.entry.citation,
+                        kind="source-evidence",
+                        text=body + " invented",
+                    )
+                )
+            assert rejected.value.status_code == 422
+            with pytest.raises(ServerResponseError) as ordinary:
+                await client.remember_memory(RememberMemoryRequest(scope_id=scope_id, kind="fact", text=body))
+            assert ordinary.value.status_code == 422
+            assert (
+                await client.list_memory_entries(ListMemoryEntriesRequest(scope_id=scope_id))
+            ).memory == revised.memory
+
+        reopened = create_server_app(settings=_server_settings(database))
+        async with (
+            reopened.router.lifespan_context(reopened),
+            httpx.AsyncClient(transport=httpx.ASGITransport(app=reopened), base_url="http://testserver") as transport,
+        ):
+            client = PowerContextClient("http://testserver", http_client=transport, trust_transport_security=True)
+            for exact_citation in (citation, revised.entry.citation):
+                exact = await client.get_memory_entry(GetMemoryEntryRequest(scope_id=scope_id, citation=exact_citation))
+                assert exact.text == body
+
+    asyncio.run(scenario())
+
+
 def test_sdk_memory_lifecycle_reaches_one_composed_runtime(tmp_path: Path) -> None:
     app = create_server_app(settings=_server_settings(tmp_path / "runtime.db"))
 

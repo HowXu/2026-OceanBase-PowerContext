@@ -9263,7 +9263,7 @@ components:
         text:
           type: string
           minLength: 1
-          description: Must not exceed 8192 UTF-8 bytes after normalization.
+          description: Must not exceed 8192 UTF-8 bytes after normalization, except that an existing complete single-Source evidence body may be retained unchanged up to 65536 UTF-8 bytes.
         reason:
           type: string
           maxLength: 512
