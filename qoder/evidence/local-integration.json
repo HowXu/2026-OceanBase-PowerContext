@@ -1,0 +1,22 @@
+{
+  "testedAt": "2026-10-29T10:50:11.333Z",
+  "scopeId": "scp_026r30wjvg0b5zr3c9zwxarqy0",
+  "taskId": "art_43bca86bb00b451ea731e734e451790b",
+  "handoffId": "art_7d5ffe0583a848dd9dcd11ea46a27214",
+  "restoredProgress": 60,
+  "contextStatus": "ready",
+  "staleRevisionRejected": true,
+  "staleEtagRejected": true,
+  "applicationRestartRestored": true,
+  "powerContextProcessRestartRestored": true,
+  "powercontextCommit": "bf2ac1fcd9223af7bbab97f8e8e39a269b07fee3",
+  "nodeVersion": "24.14.1",
+  "pythonVersion": "3.12.12",
+  "productionDeploymentVerified": false,
+  "restartSample": {
+    "progress": 60,
+    "handoffId": "art_b52cd4e32a684d4baff6b333865e7a04",
+    "scopeId": "scp_7zvwma2wvpkqn4hzscmk9411fd",
+    "taskId": "art_f0a8ef6afc3749a1a1d96e0a716d483a"
+  }
+}

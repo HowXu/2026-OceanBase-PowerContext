@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-api-base="/api">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="通过 PowerContext 保存任务进度和工作交接，在下一次会话中继续工作。">
+  <title>任务进度追踪器 · PowerContext</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header"><h1>📋 任务追踪器</h1><p>把进度留下，把工作接上</p></div>
+      <nav aria-label="主导航"><ul class="nav-menu">
+        <li><a class="nav-link" href="#dashboard" data-page="dashboard">📊 仪表盘</a></li>
+        <li><a class="nav-link" href="#tasks" data-page="tasks">📝 任务管理</a></li>
+        <li><a class="nav-link" href="#handoff" data-page="handoff">🔄 工作交接</a></li>
+        <li><a class="nav-link" href="#about" data-page="about">📖 项目与验证</a></li>
+      </ul></nav>
+      <div class="connection-box"><span id="connection" role="status">正在检查服务…</span><button type="button" id="refresh" class="btn btn-secondary btn-sm">刷新记忆</button></div>
+    </aside>
+    <main class="main-content">
+      <div id="notice" class="notice" role="alert" hidden></div>
+      <section data-section="dashboard">
+        <header class="page-header"><h2>仪表盘</h2><p>从 PowerContext 读取已保存的任务与进度。</p></header>
+        <div class="stats-grid" id="stats" aria-live="polite"></div>
+        <div class="card"><div class="card-header"><h3>最近任务</h3><a class="btn btn-secondary btn-sm" href="#tasks">查看全部</a></div><div class="card-body" id="recentTasks">正在读取…</div></div>
+        <div class="card"><div class="card-header"><h3>快速添加任务</h3></div><div class="card-body">
+          <form id="quickAddForm"><div class="form-row">
+            <div class="form-group"><label class="form-label" for="quickTitle">任务标题</label><input class="form-input" id="quickTitle" required maxlength="120" placeholder="下一件要完成的事"></div>
+            <div class="form-group"><label class="form-label" for="quickPriority">优先级</label><select class="form-select" id="quickPriority"><option value="medium">中</option><option value="high">高</option><option value="low">低</option></select></div>
+          </div><button class="btn btn-primary" type="submit">保存到 PowerContext</button></form>
+        </div></div>
+      </section>
+      <section data-section="tasks" hidden>
+        <header class="page-header"><h2>任务管理</h2><p>记录进展，跨会话继续；保存成功后才更新列表。</p></header>
+        <div class="toolbar"><button class="btn btn-primary" id="addTask" type="button">+ 新建任务</button>
+          <select class="form-select" id="filterStatus" aria-label="筛选任务状态"><option value="">全部状态</option><option value="todo">待办</option><option value="in_progress">进行中</option><option value="done">已完成</option></select>
+          <select class="form-select" id="filterPriority" aria-label="筛选优先级"><option value="">全部优先级</option><option value="high">高</option><option value="medium">中</option><option value="low">低</option></select>
+        </div><div class="task-list" id="taskList">正在读取…</div>
+        <button type="button" class="btn btn-secondary" id="importLegacy" hidden>导入本浏览器旧版任务</button>
+      </section>
+      <section data-section="handoff" hidden>
+        <header class="page-header"><h2>工作交接</h2><p>保留任务进度、已做工作和下一步，让后续会话接得上。</p></header>
+        <div class="card"><div class="card-header"><h3>创建交接记录</h3></div><div class="card-body"><form id="handoffForm">
+          <div class="form-group"><label class="form-label" for="handoffTask">选择任务</label><select class="form-select" id="handoffTask" required><option value="">请选择任务</option></select></div>
+          <div class="form-group"><label class="form-label" for="handoffSummary">已完成的工作</label><textarea class="form-textarea" id="handoffSummary" maxlength="1000"></textarea></div>
+          <div class="form-group"><label class="form-label" for="handoffNext">下一步行动</label><input class="form-input" id="handoffNext" required maxlength="500"></div>
+          <button type="submit" class="btn btn-primary">保存交接</button>
+        </form></div></div>
+        <div class="card"><div class="card-header"><h3>读取历史上下文</h3></div><div class="card-body">
+          <form id="contextForm" class="toolbar"><label for="contextQuery">任务名称或关键词</label><input class="form-input" id="contextQuery" required maxlength="200"><button class="btn btn-primary" type="submit">从 PowerContext 召回</button></form>
+          <pre id="contextResult" class="context-output" aria-live="polite">输入已保存任务中的关键词，读取可复用的历史上下文。</pre>
+        </div></div>
+        <div class="card"><div class="card-header"><h3>交接历史</h3></div><div class="card-body" id="handoffList">正在读取…</div></div>
+      </section>
+      <section data-section="about" hidden>
+        <header class="page-header"><h2>让进度跨过会话</h2><p>面向工作提效的任务与上下文追踪工具。</p></header>
+        <article class="card"><div class="card-body prose">
+          <h3>解决什么问题</h3><p>任务散落在聊天和笔记里，换一次会话就要重新解释进度。这个项目把任务、进展与下一步保存在 PowerContext，下次打开时直接读取。</p>
+          <h3>核心功能</h3><p>任务创建与编辑、进度与优先级、截止日期、工作交接，以及历史上下文召回。任务和交接都从服务端记忆恢复，不以浏览器缓存作为保存成功的依据。</p>
+          <figure class="demo"><img src="demo.png" alt="本地真实 PowerContext 测试后的任务管理页面：OceanReview 项目验收任务恢复为 60% 进度" loading="lazy"><figcaption>2026-10-29 本地真实服务测试画面；生产站点仍须单独发布验证。</figcaption></figure>
+          <h3>体验与复现</h3><ol><li>创建名称为「项目验收 OceanReview」的任务。</li><li>把进度改为 60%，创建含「继续核对部署」的交接。</li><li>另开浏览器或重启本地应用，确认任务与交接仍在。</li><li>到工作交接页搜索 OceanReview，核对返回的历史上下文。</li></ol>
+          <p>当前站点使用部署者配置的共享工作区。请仅使用演示数据。</p>
+          <p><a href="https://github.com/HowXu/2026-OceanBase-PowerContext/tree/2026-competition-ecosystem/qoder" target="_blank" rel="noopener">代码仓库</a> · <a href="https://github.com/HowXu/2026-OceanBase-PowerContext/blob/2026-competition-ecosystem/qoder/DEPLOY.md" target="_blank" rel="noopener">运行与部署说明</a> · <a href="https://github.com/HowXu/2026-OceanBase-PowerContext/blob/2026-competition-ecosystem/qoder/VERIFY.md" target="_blank" rel="noopener">验证样例</a></p>
+          <h3>开发记录</h3><p>开发来源、已验证内容和待补交的 Qoder 记录分别列在仓库 SUBMISSION.md 中。本站不把修复记录当作 Qoder 开发证明。</p>
+          <details><summary>查看本次读取的保存凭据</summary><pre id="evidence" class="context-output">服务连接后显示记忆 ID 和版本。</pre></details>
+        </div></article>
+      </section>
+    </main>
+  </div>
+  <div class="modal-overlay" id="taskModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+    <div class="modal"><div class="modal-header"><h3 id="modalTitle">新建任务</h3><button type="button" class="modal-close" id="closeModal" aria-label="关闭">×</button></div>
+      <form id="taskForm"><input type="hidden" id="taskId"><input type="hidden" id="taskRevision">
+        <div class="form-group"><label class="form-label" for="taskTitle">标题</label><input class="form-input" id="taskTitle" required maxlength="120"></div>
+        <div class="form-group"><label class="form-label" for="taskDesc">描述</label><textarea class="form-textarea" id="taskDesc" maxlength="1000"></textarea></div>
+        <div class="form-row"><div class="form-group"><label class="form-label" for="taskPriority">优先级</label><select class="form-select" id="taskPriority"><option value="medium">中</option><option value="high">高</option><option value="low">低</option></select></div><div class="form-group"><label class="form-label" for="taskDeadline">截止日期</label><input type="date" class="form-input" id="taskDeadline"></div></div>
+        <div class="form-group"><label class="form-label" for="taskProgress">进度（0–100）</label><input class="form-input" type="number" min="0" max="100" step="1" id="taskProgress" value="0" required></div>
+        <div class="modal-footer"><button type="button" class="btn btn-secondary" id="cancelModal">取消</button><button type="submit" class="btn btn-primary">保存</button></div>
+      </form>
+    </div>
+  </div>
+  <script src="app.js" defer></script>
+</body>
+</html>

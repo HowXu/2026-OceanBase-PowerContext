@@ -1,0 +1,2 @@
+# API contract tested at this exact upstream revision.
+powercontext[cli,server] @ git+https://github.com/oceanbase/powercontext.git@bf2ac1fcd9223af7bbab97f8e8e39a269b07fee3
