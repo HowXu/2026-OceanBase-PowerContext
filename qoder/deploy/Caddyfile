@@ -1,0 +1,4 @@
+{$PC_PUBLIC_HOSTNAME} {
+    reverse_proxy powercontext:8000
+    header -Server
+}
