@@ -67,6 +67,9 @@ npm start
 
 ## 4. 生产 PowerContext
 
+目前没有公网服务时，可使用 [deploy/README.md](deploy/README.md) 中提供的 Docker、持久卷与 HTTPS 配置。
+这些配置尚未部署到云服务器，也未创建任何付费资源。
+
 Qoder 云端的 `127.0.0.1` 指向云端函数自身，无法访问你的电脑。
 需要已有、可持久运行的 PowerContext HTTPS 服务：
 

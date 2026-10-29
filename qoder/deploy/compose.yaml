@@ -1,0 +1,36 @@
+name: qoder-powercontext
+services:
+  powercontext:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    restart: unless-stopped
+    environment:
+      POWERCONTEXT_SERVER_ACCESS_MODE: enforced
+      POWERCONTEXT_SERVER_AUTH_TOKEN: ${POWERCONTEXT_SERVER_AUTH_TOKEN:?Generate deploy/.env.production first}
+    volumes:
+      - powercontext_data:/data
+    expose:
+      - "8000"
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      powercontext:
+        condition: service_healthy
+    environment:
+      PC_PUBLIC_HOSTNAME: ${PC_PUBLIC_HOSTNAME:?Set a public DNS hostname}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  powercontext_data:
+  caddy_data:
+  caddy_config:
