@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>任务管理 - 任务进度追踪器</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>📋 任务追踪器</h1>
+        <p>PowerContext 驱动</p>
+      </div>
+      <ul class="nav-menu">
+        <li class="nav-item">
+          <a href="/" class="nav-link">
+            <span class="icon"></span>
+            <span>仪表盘</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/tasks" class="nav-link active">
+            <span class="icon">📝</span>
+            <span>任务管理</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/handoff" class="nav-link">
+            <span class="icon">🔄</span>
+            <span>工作交接</span>
+          </a>
+        </li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header">
+        <h2>任务管理</h2>
+        <p>创建、编辑和跟踪任务进度</p>
+      </div>
+
+      <!-- Add Task Button -->
+      <div style="margin-bottom: 24px;">
+        <button class="btn btn-primary" onclick="openAddModal()">+ 新建任务</button>
+      </div>
+
+      <!-- Filter Bar -->
+      <div class="card" style="margin-bottom: 24px;">
+        <div class="card-body" style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
+          <select class="form-select" id="filterStatus" style="width: auto; min-width: 150px;" onchange="loadTasks()">
+            <option value="">全部状态</option>
+            <option value="todo">待办</option>
+            <option value="in_progress">进行中</option>
+            <option value="done">已完成</option>
+          </select>
+          <select class="form-select" id="filterPriority" style="width: auto; min-width: 150px;" onchange="loadTasks()">
+            <option value="">全部优先级</option>
+            <option value="high">高优先级</option>
+            <option value="medium">中优先级</option>
+            <option value="low">低优先级</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Task List -->
+      <div id="taskList" class="task-list">
+        <div class="empty-state">
+          <div class="icon"></div>
+          <p>暂无任务</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Add/Edit Modal -->
+  <div class="modal-overlay" id="taskModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modalTitle">新建任务</h3>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <form id="taskForm">
+        <input type="hidden" id="taskId">
+        <div class="form-group">
+          <label class="form-label">任务标题 *</label>
+          <input type="text" class="form-input" id="taskTitle" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">描述</label>
+          <textarea class="form-textarea" id="taskDesc"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">优先级</label>
+            <select class="form-select" id="taskPriority">
+              <option value="low">低</option>
+              <option value="medium" selected>中</option>
+              <option value="high">高</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">截止日期</label>
+            <input type="date" class="form-input" id="taskDeadline">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal()">取消</button>
+          <button type="submit" class="btn btn-primary">保存</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    let allTasks = [];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadTasks();
+    });
+
+    async function loadTasks() {
+      try {
+        const res = await fetch('/api/tasks');
+        const data = await res.json();
+        allTasks = data.tasks;
+
+        const statusFilter = document.getElementById('filterStatus').value;
+        const priorityFilter = document.getElementById('filterPriority').value;
+
+        let filtered = allTasks;
+        if (statusFilter) filtered = filtered.filter(t => t.status === statusFilter);
+        if (priorityFilter) filtered = filtered.filter(t => t.priority === priorityFilter);
+
+        renderTasks(filtered);
+      } catch (e) {
+        console.error('Failed to load tasks:', e);
+      }
+    }
+
+    function renderTasks(tasks) {
+      const container = document.getElementById('taskList');
+
+      if (tasks.length === 0) {
+        container.innerHTML = '<div class="empty-state"><div class="icon"></div><p>暂无任务</p></div>';
+        return;
+      }
+
+      container.innerHTML = tasks.map(task => `
+        <div class="task-item">
+          <div class="task-item-header">
+            <div class="task-item-title">${escapeHtml(task.title)}</div>
+            <div class="task-item-actions">
+              <button class="btn btn-secondary btn-sm" onclick="openEditModal(${task.id})">编辑</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteTask(${task.id})">删除</button>
+            </div>
+          </div>
+          ${task.description ? `<p style="color: var(--gray-600); margin-bottom: 12px; font-size: 0.9rem;">${escapeHtml(task.description)}</p>` : ''}
+          <div class="task-item-meta">
+            <span class="badge badge-${getPriorityClass(task.priority)}">${getPriorityLabel(task.priority)}</span>
+            <span class="badge badge-${getStatusClass(task.status)}">${getStatusLabel(task.status)}</span>
+            ${task.deadline ? `<span class="badge badge-gray">📅 ${task.deadline}</span>` : ''}
+            <span class="badge badge-gray">🕐 ${formatDate(task.updatedAt)}</span>
+          </div>
+          <div class="progress-container">
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" style="width: ${task.progress}%"></div>
+            </div>
+          </div>
+          <div class="progress-slider">
+            <input type="range" min="0" max="100" value="${task.progress}"
+                   onchange="updateProgress(${task.id}, this.value)">
+            <div style="text-align: right; font-size: 0.85rem; color: var(--primary); font-weight: 600; margin-top: 4px;">
+              ${task.progress}%
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openAddModal() {
+      document.getElementById('modalTitle').textContent = '新建任务';
+      document.getElementById('taskForm').reset();
+      document.getElementById('taskId').value = '';
+      document.getElementById('taskModal').classList.add('active');
+    }
+
+    function openEditModal(id) {
+      const task = allTasks.find(t => t.id === id);
+      if (!task) return;
+
+      document.getElementById('modalTitle').textContent = '编辑任务';
+      document.getElementById('taskId').value = task.id;
+      document.getElementById('taskTitle').value = task.title;
+      document.getElementById('taskDesc').value = task.description;
+      document.getElementById('taskPriority').value = task.priority;
+      document.getElementById('taskDeadline').value = task.deadline || '';
+      document.getElementById('taskModal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('taskModal').classList.remove('active');
+    }
+
+    document.getElementById('taskForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const id = document.getElementById('taskId').value;
+      const data = {
+        title: document.getElementById('taskTitle').value.trim(),
+        description: document.getElementById('taskDesc').value.trim(),
+        priority: document.getElementById('taskPriority').value,
+        deadline: document.getElementById('taskDeadline').value || null,
+      };
+
+      try {
+        if (id) {
+          await fetch(`/api/tasks/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          });
+        } else {
+          await fetch('/api/tasks', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          });
+        }
+        closeModal();
+        await loadTasks();
+      } catch (e) {
+        alert('保存失败');
+      }
+    });
+
+    async function updateProgress(id, progress) {
+      try {
+        await fetch(`/api/tasks/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ progress: parseInt(progress) }),
+        });
+        await loadTasks();
+      } catch (e) {
+        console.error('Failed to update progress:', e);
+      }
+    }
+
+    async function deleteTask(id) {
+      if (!confirm('确定要删除这个任务吗？')) return;
+
+      try {
+        await fetch(`/api/tasks/${id}`, { method: 'DELETE' });
+        await loadTasks();
+      } catch (e) {
+        alert('删除失败');
+      }
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function getStatusClass(status) {
+      return { todo: 'warning', in_progress: 'info', done: 'success' }[status] || 'gray';
+    }
+
+    function getStatusLabel(status) {
+      return { todo: '待办', in_progress: '进行中', done: '已完成' }[status] || status;
+    }
+
+    function getPriorityClass(priority) {
+      return { low: 'success', medium: 'warning', high: 'danger' }[priority] || 'gray';
+    }
+
+    function getPriorityLabel(priority) {
+      return { low: '低优先级', medium: '中优先级', high: '高优先级' }[priority] || priority;
+    }
+
+    function formatDate(dateString) {
+      if (!dateString) return '';
+      const date = new Date(dateString);
+      return date.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    }
+  </script>
+</body>
+</html>

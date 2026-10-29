@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>工作交接 - 任务进度追踪器</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>📋 任务追踪器</h1>
+        <p>PowerContext 驱动</p>
+      </div>
+      <ul class="nav-menu">
+        <li class="nav-item">
+          <a href="/" class="nav-link">
+            <span class="icon"></span>
+            <span>仪表盘</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/tasks" class="nav-link">
+            <span class="icon">📝</span>
+            <span>任务管理</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/handoff" class="nav-link active">
+            <span class="icon">🔄</span>
+            <span>工作交接</span>
+          </a>
+        </li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header">
+        <h2>工作交接</h2>
+        <p>记录工作进展，便于跨会话继续工作</p>
+      </div>
+
+      <!-- Create Handoff -->
+      <div class="card">
+        <div class="card-header">
+          <h3>创建交接记录</h3>
+        </div>
+        <div class="card-body">
+          <form id="handoffForm">
+            <div class="form-group">
+              <label class="form-label">选择任务 *</label>
+              <select class="form-select" id="handoffTask" required>
+                <option value="">请选择任务</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">工作摘要</label>
+              <textarea class="form-textarea" id="handoffSummary" placeholder="描述当前工作进展..."></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">下一步行动 *</label>
+              <input type="text" class="form-input" id="handoffNext" required placeholder="接下来需要做什么？">
+            </div>
+            <button type="submit" class="btn btn-primary">创建交接记录</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Handoff History -->
+      <div class="card">
+        <div class="card-header">
+          <h3>交接历史</h3>
+        </div>
+        <div class="card-body">
+          <div id="handoffList">
+            <div class="empty-state">
+              <div class="icon">🔄</div>
+              <p>暂无交接记录</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      loadTasksForSelect();
+      loadHandoffs();
+    });
+
+    async function loadTasksForSelect() {
+      try {
+        const res = await fetch('/api/tasks');
+        const data = await res.json();
+        const select = document.getElementById('handoffTask');
+
+        data.tasks.forEach(task => {
+          const option = document.createElement('option');
+          option.value = task.id;
+          option.textContent = `${task.title} (${getStatusLabel(task.status)} - ${task.progress}%)`;
+          select.appendChild(option);
+        });
+      } catch (e) {
+        console.error('Failed to load tasks:', e);
+      }
+    }
+
+    async function loadHandoffs() {
+      try {
+        const res = await fetch('/api/handoff');
+        const data = await res.json();
+        const container = document.getElementById('handoffList');
+
+        if (data.handoffs.length === 0) {
+          container.innerHTML = '<div class="empty-state"><div class="icon"></div><p>暂无交接记录</p></div>';
+          return;
+        }
+
+        container.innerHTML = data.handoffs.reverse().map(h => `
+          <div class="handoff-item">
+            <div class="handoff-item-header">
+              <div class="handoff-item-title">${escapeHtml(h.taskTitle)}</div>
+              <div class="handoff-item-time">${formatDate(h.createdAt)}</div>
+            </div>
+            ${h.summary ? `<div class="handoff-item-content">${escapeHtml(h.summary)}</div>` : ''}
+            <div class="handoff-item-next">→ ${escapeHtml(h.nextAction)}</div>
+            <div style="margin-top: 8px;">
+              <span class="badge badge-${getPriorityClass('medium')}">进度: ${h.progress}%</span>
+              <span class="badge badge-${getStatusClass(h.status)}">${getStatusLabel(h.status)}</span>
+            </div>
+          </div>
+        `).join('');
+      } catch (e) {
+        console.error('Failed to load handoffs:', e);
+      }
+    }
+
+    document.getElementById('handoffForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const data = {
+        taskId: parseInt(document.getElementById('handoffTask').value),
+        summary: document.getElementById('handoffSummary').value.trim(),
+        nextAction: document.getElementById('handoffNext').value.trim(),
+      };
+
+      if (!data.taskId || !data.nextAction) return;
+
+      try {
+        await fetch('/api/handoff', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+
+        document.getElementById('handoffForm').reset();
+        await loadHandoffs();
+        alert('交接记录已创建！');
+      } catch (e) {
+        alert('创建失败');
+      }
+    });
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function getStatusClass(status) {
+      return { todo: 'warning', in_progress: 'info', done: 'success' }[status] || 'gray';
+    }
+
+    function getStatusLabel(status) {
+      return { todo: '待办', in_progress: '进行中', done: '已完成' }[status] || status;
+    }
+
+    function getPriorityClass(priority) {
+      return { low: 'success', medium: 'warning', high: 'danger' }[priority] || 'gray';
+    }
+
+    function formatDate(dateString) {
+      if (!dateString) return '';
+      const date = new Date(dateString);
+      return date.toLocaleDateString('zh-CN', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+    }
+  </script>
+</body>
+</html>
